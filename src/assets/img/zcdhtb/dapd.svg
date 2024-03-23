@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="_-h-矩形_45_拷贝" data-name="-h-矩形 45 拷贝" class="cls-1" d="M53,284H63a2,2,0,0,1,2,2v11a2,2,0,0,1-2,2H53a2,2,0,0,1-2-2V286A2,2,0,0,1,53,284Zm0,4h9v2H53v-2Zm0,4h5v2H53v-2Zm0.492,7.805,12.156-12.157,5.445,5.446L58.937,305.25ZM58,297h2v2H58v-2Zm1-1h2v2H59v-2Zm1-1h2v2H60v-2Zm1-1h2v2H61v-2Zm1-1h2v2H62v-2Zm2-2h2v2H64v-2Zm0,1h1v1H64v-1Z" transform="translate(-51 -284)"/>
+</svg>

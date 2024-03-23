@@ -1,0 +1,85 @@
+<script th:src="@{/js/easyui.min.js}"></script>
+<!--树状导航-->
+<div th:fragment="tree(treeList)">
+   <ul>
+      <span></span>
+      <li th:each="classifyVO:${treeList}">
+         <div class="close_menu">
+            <span th:if="${!#lists.isEmpty(classifyVO.getSons())}" onclick="like(this,event)"></span>
+            <a th:name="${classifyVO.getClassify().getId()}" th:text="'分类:'+${classifyVO.getClassify().getName()}"
+               th:if="${classifyVO.getClassify()!=null}" isArchive="false">
+            </a>
+            <a th:name="${classifyVO.getArchive().getId()}" th:text="'盒:'+${classifyVO.getArchive().getShowName()}"
+               th:if="${classifyVO.getArchive()!=null} AND ${classifyVO.getArchive().getArchiveType()==1}"
+               isArchive="true" archiveType="1">
+            </a>
+            <a th:name="${classifyVO.getArchive().getId()}" th:text="'件:'+${classifyVO.getArchive().getShowName()}"
+               th:if="${classifyVO.getArchive()!=null} AND ${classifyVO.getArchive().getArchiveType()==2}"
+               isArchive="true" archiveType="2">
+            </a>
+            <a th:name="${classifyVO.getArchive().getId()}" th:text="'卷:'+${classifyVO.getArchive().getShowName()}"
+               th:if="${classifyVO.getArchive()!=null} AND ${classifyVO.getArchive().getArchiveType()==3}"
+               isArchive="true" archiveType="3">
+            </a>
+            <a th:name="${classifyVO.getArchive().getId()}" th:text="'件内:'+${classifyVO.getArchive().getShowName()}"
+               th:if="${classifyVO.getArchive()!=null} AND ${classifyVO.getArchive().getArchiveType()==4}"
+               isArchive="true" archiveType="4">
+            </a>
+            <a th:name="${classifyVO.getArchive().getId()}" th:text="'卷内:'+${classifyVO.getArchive().getShowName()}"
+               th:if="${classifyVO.getArchive()!=null} AND ${classifyVO.getArchive().getArchiveType()==5}"
+               isArchive="true" archiveType="5">
+            </a>
+            <a th:name="${classifyVO.getArchive().getId()}" th:text="'箱:'+${classifyVO.getArchive().getShowName()}"
+               th:if="${classifyVO.getArchive()!=null} AND ${classifyVO.getArchive().getArchiveType()==6}"
+               isArchive="true" archiveType="6">
+            </a>
+         </div>
+         <th:block th:unless="${#lists.isEmpty(classifyVO.getSons())}"
+            th:include="this::tree(${classifyVO.getSons()})" />
+      </li>
+   </ul>
+</div>
+
+<!--档案数据页左侧分类-->
+<div th:fragment="classify(list)">
+   <ul class="ul-Father" th:each="classifyVO:${list}">
+      <li>
+         <span th:if="${classifyVO.getThisIsClassify()}">
+            <a href="#" class="color iconfont icon-wenjianjia" th:text="${classifyVO.getClassify().getName()}"
+               th:title="${classifyVO.getClassify().getName()}" ifShow="false" aid="null"></a>
+         </span>
+         <div th:if="!${classifyVO.getThisIsClassify()}">
+            <a th:if="${classifyVO.getArchive().getArchiveType()==1}" href="#" class="color iconfont icon-wenjianjia"
+               th:type="${classifyVO.getArchive().getArchiveType()}" th:aid="${classifyVO.getArchive().getId()}"
+               th:title="${classifyVO.getArchive().getShowName()}" th:text="${classifyVO.getArchive().getShowName()}"
+               ifShow="false"></a>
+            <a th:if="${classifyVO.getArchive().getArchiveType()==2}" href="#" class="color iconfont icon-wenben"
+               th:type="${classifyVO.getArchive().getArchiveType()}" th:aid="${classifyVO.getArchive().getId()}"
+               th:title="${classifyVO.getArchive().getShowName()}" th:text="${classifyVO.getArchive().getShowName()}"
+               ifShow="false"></a>
+
+            <a th:if="${classifyVO.getArchive().getArchiveType()==3}" href="#" class="color iconfont icon-wenben"
+               th:type="${classifyVO.getArchive().getArchiveType()}" th:aid="${classifyVO.getArchive().getId()}"
+               th:title="${classifyVO.getArchive().getShowName()}" th:text="${classifyVO.getArchive().getShowName()}"
+               ifShow="false"></a>
+
+            <a th:if="${classifyVO.getArchive().getArchiveType()==4}" href="#" class="color iconfont icon-wenben"
+               th:type="${classifyVO.getArchive().getArchiveType()}" th:aid="${classifyVO.getArchive().getId()}"
+               th:title="${classifyVO.getArchive().getShowName()}" th:text="${classifyVO.getArchive().getShowName()}"
+               ifShow="false"></a>
+
+            <a th:if="${classifyVO.getArchive().getArchiveType()==5}" href="#" class="color iconfont icon-wenben"
+               th:type="${classifyVO.getArchive().getArchiveType()}" th:aid="${classifyVO.getArchive().getId()}"
+               th:title="${classifyVO.getArchive().getShowName()}" th:text="${classifyVO.getArchive().getShowName()}"
+               ifShow="false"></a>
+            <a th:if="${classifyVO.getArchive().getArchiveType()==6}" href="#" class="color iconfont icon-wenben"
+               th:type="${classifyVO.getArchive().getArchiveType()}" th:aid="${classifyVO.getArchive().getId()}"
+               th:title="${classifyVO.getArchive().getShowName()}" th:text="${classifyVO.getArchive().getShowName()}"
+               ifShow="false"></a>
+
+         </div>
+         <th:block th:unless="${#lists.isEmpty(classifyVO.getSons())}"
+            th:include="this::classify(${classifyVO.getSons()})" />
+      </li>
+   </ul>
+</div>

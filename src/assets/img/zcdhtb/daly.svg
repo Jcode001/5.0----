@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="_-h-矩形_13_拷贝_2" data-name="-h-矩形 13 拷贝 2" class="cls-1" d="M30,535h5.4v18H30V535Zm1.8,2h1.8v10H31.8V537Zm0,12h1.8v2H31.8v-2Zm4.5-14h5.4v18H36.3V535Zm1.8,2h1.8v10H38.1V537Zm0,12h1.8v2H38.1v-2Zm4.5-14H48v18H42.6V535Zm1.8,2h1.8v10H44.4V537Zm0,12h1.8v2H44.4v-2Z" transform="translate(-30 -535)"/>
+</svg>

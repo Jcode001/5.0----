@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>档案门类</title>
+    <link rel="stylesheet" th:href="@{/bootstrap-5.1.3-dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/configuration/dictionaries.css}">
+    <link rel="stylesheet" th:href="@{/css/tree.css}">
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+    <script th:src="@{/js/treescroll.min.js}"></script>
+    <script th:src="@{/js/common/common.js}"></script>
+    <script th:src="@{/js/index.js}"></script>
+    <script th:src="@{/bootstrap-5.1.3-dist/js/bootstrap.bundle.js}"></script>
+    <script th:src="@{/js/menuTotal.js}"></script>
+    <link rel="stylesheet" th:href="@{/icon/iconfont.css}">
+    
+
+    <!-- <link rel="stylesheet" href="/static/bootstrap-5.1.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/tree.css">
+    <link rel="stylesheet" href="/static/css/configuration/dictionaries.css">
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <script src="/static/js/jquery-1.11.3.min.js"></script>
+    <script src="/static/js/configuration/dictionaries.js"></script>
+    <script src="/static/js/index.js"></script>
+    <script src="/static/bootstrap-5.1.3-dist/js/bootstrap.bundle.js"></script>
+    
+    <script th:src="@{/js/common/common.js}"></script> -->
+</head>
+
+<body class="wrapppd">
+    <div class="row" style="height:8vh">
+        <headere class="col-12" style="height:100%">
+        </headere>
+    </div>
+    <div class="row contentFather" style="height:92vh">
+        <div class="contentLeft col-2" style="height:100%">
+            <div style="height:7vh" class="topNavigationBorder" onclick="closeMenu()">
+                <span class="iconfont icon-zhankaicaidan1 globalMenu" id="Menu">菜单</span>
+            </div>
+        </div>
+        <div class="col-10 contentRight" style="height:100%;;width:85%;background-color: rgb(255, 255, 255);">
+            <div id="functionButton" style="height:100%">
+                <div class="row" style="margin-left:2vw;height: 7vh;">
+                    <div class="currentPosition col-12" style="height:100%;">
+                        <span style="margin-left:2vw"> <a href="/toArchiveHome">智慧档案管理总平台> </a><a
+                                href="#">字典设置</a></span>
+                    </div>
+                </div>
+                <div class="row" style="height: 4vh;margin-top: 0vh;width: 100%;margin-left: 0vw;">
+                    <div class="col-6" style="height:7vh">
+                        <button type="button" class="btn btn-primary add" data-bs-toggle="modal"
+                            style="margin-left: 2vw;" data-bs-target="#exampleModal" data-bs-whatever="@mdo"
+                            onclick="addddd()">新增
+                        </button>
+                    </div>
+                    <div class="col-6 letSearchHidden">
+                        <div class="changePosition">
+                            <div></div>
+                            <input type="text" class="form-control" id="searchById"
+                                style="width: 30%;display:inline;">
+                            <button class="btn btn-primary" type="button" onclick="searchMessage(this)"
+                                style="border-radius: 0px;margin-right: 1vw;">搜索</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row changeScoll" style="overflow-y: scroll;height:70vh;margin-left: 2vw;">
+                    <div style="height:70vh;margin-top: 2vh;">
+                        <div class="table-responsive" style="width: 100%;height: auto;">
+                            <!-- 放入table内容 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 分页 -->
+                <div style="margin-top: 3vh;">
+                    <div class="row bottomMessage" style="height:7vh;margin-left: 1.8vw;margin-top: 3vh;">
+                        <div class="col-6">
+                            <div
+                                style="float: left;width: 12.375rem;margin-top: 0.25rem;height: 2.5rem;line-height: 2.5rem;color: rgb(184, 184, 184);">
+                                <span style="margin-left:2vw">共<span
+                                        id="totalNumberOfDisplaysAtTheBottom"></span>条:每页</span>
+                                <select class="form-select" aria-label="Default select example"
+                                    style="width: 5rem;position:relative;top: -2.2rem;left: 13.625rem;height:2rem;color:rgb(184,184,184)"
+                                    id="pageSizeUl">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                </select>
+                            </div>
+                            <div style="color:rgb(184,184,184)"></div>
+                        </div>
+                        <div class="col-6">
+                            <div style="float: right;margin-top: 0.54rem;" class="showPageMessage"></div>
+                            <div style="float: right;margin-top: 0.25rem;width: 10rem;margin-right:2rem ;">
+                                <div class="belike">
+                                    <span style="margin-right: 2px;color:#b8b8b8;line-height: 2rem;">跳转到</span>
+                                    <input class="form-control form-control-sm" type="text" placeholder="" id="jumpVal"
+                                        aria-label=".form-control-sm example" style="width: 5rem;"
+                                        onkeyup="this.value=this.value.replace(/[^0-9]/g,'')">
+                                    <span style="margin-left: 2px;color:#b8b8b8;line-height: 2rem;">页</span>
+                                </div>
+                                <div class="pagenation">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination1">
+                                            <!-- 分页器加在这里 -->
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 添加模块 -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">添加字典</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="dictionariesType" class="col-form-label">字典类型<span style="color:red">*</span>:</label>
+                            <input class="form-control" list="datalistOptions" id="dictionariesType" placeholder="">
+                            <datalist id="datalistOptions">
+                            </datalist>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dictionariesVal" class="col-form-label">字典值<span style="color:red">*</span>:</label>
+                            <input class="form-control form-control-sm listLengthInput" type="text" placeholder=""
+                                id="dictionariesVal" aria-label=".form-control-sm example">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="introduce" class="col-form-label">介绍<span style="color:red">*</span>:</label>
+                            <textarea class="form-control" id="introduce"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary buttText" onclick="addDictionaries(this)">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script th:src="@{/js/configuration/dictionaries.js}"></script>
+
+</html>

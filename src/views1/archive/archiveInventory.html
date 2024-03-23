@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>档案门类</title>
+    <link rel="stylesheet" th:href="@{/bootstrap-5.1.3-dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/archve/archiveInventory.css}">
+    <script th:src="@{/bootstrap-5.1.3-dist/js/bootstrap.bundle.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/tree.css}">
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+    <script th:src="@{/js/treescroll.min.js}"></script>
+    <script th:src="@{/js/archve/archiveInventory.js}"></script>
+    <script th:src="@{/js/common/common.js}"></script>
+    <script th:src="@{/js/index.js}"></script>
+    <link rel="stylesheet" th:href="@{/icon/iconfont.css}">
+    <script th:src="@{/js/echarts.min.js}"></script>
+    <script th:src="@{/js/menuTotal.js}"></script>
+    <script type="text/javascript"
+        th:src="@{/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js}"></script>
+    <script type="text/javascript"
+        th:src="@{/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+    <link th:href="@{/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css}" rel="stylesheet">
+
+
+    <!-- <link rel="stylesheet" href="/static/bootstrap-5.1.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/tree.css">
+    <script src="../../static/bootstrap-5.1.3-dist/js/bootstrap.bundle.js"></script>
+    <link rel="stylesheet" href="/static/css/archve/archiveInventory.css">
+    <script src="/static/js/jquery-1.11.3.min.js"></script>
+    <script src="/static/js/archve/archiveInventory.js"></script>
+    <script src="/static/js/index.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+    <link rel="stylesheet" href="/static/icon/iconfont.css"> -->
+</head>
+
+
+<body class="wrapppd">
+    <div class="container-fluid">
+        <!-- 下面是基本结构 -->
+        <div class="row topNavigation" style="height:8vh">
+            <headere class="col-12">
+            </headere>
+        </div>
+        <div class="row contentFather" style="height:92vh">
+            <div class="contentLeft col-2" style="height:100%">
+                <div style="height:7vh" class="topNavigationBorder" onclick="closeMenu()">
+                    <span class="iconfont icon-zhankaicaidan1 globalMenu" id="Menu">菜单</span>
+                </div>
+            </div>
+            <div class="col-10 contentRight" style="height:100%;width:85%;">
+                <div>
+                    <div id="functionButton" style="height:100%">
+                        <div style="height:100%;width: 99%;">
+                            <div style="height:7vh;margin-bottom:1vh;">
+                                <div class="row">
+                                    <div class="currentPosition col-12" style="height:100%;">
+                                        <span style="margin-left:2vw"> <a href="/toArchiveHome">智慧档案管理总平台> </a><a
+                                                href="#">盘点</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="height:76vh">
+                                <div style="height: 6vh;margin-left: 1.7vw;align-items: center;" class="row">
+                                    <div class="col-6" style="color:#0049A5">
+                                        <div style="display: flex;position: relative;padding-left: 45rem;align-items: center;" id="resultForP">
+                                            <div style="display: inline-block;display: flex;align-items: center;padding-left: .5rem;">
+                                                <span style="width: 2.5rem;">库房:</span>
+                                                <input type="text" class="form-control warseHouseName" style="width: 5rem;">
+                                            </div>
+                                            <div style="display: inline-block;display: flex;align-items: center;padding-left: .5rem;">
+                                                <span>区:</span>
+                                                <input type="text" class="form-control regionName" style="width: 5rem;">
+                                            </div>
+                                            <div style="display: inline-block;display: flex;align-items: center;padding-left: .5rem;">
+                                                <span>列:</span></span>
+                                                <input type="text" class="form-control columnName" style="width: 5rem;">
+                                            </div>
+                                            <div style="display: inline-block;display: flex;align-items: center;padding-left: .5rem;">
+                                                <span>层:</span>
+                                                <input type="text" class="form-control tierName" style="width: 5rem;">
+                                            </div>
+                                            <div style="display: inline-block;display: flex;align-items: center;padding-left: .5rem;">
+                                                <span>节:</span>
+                                                <input type="text" class="form-control sectionName" style="width: 5rem;">
+                                            </div>
+                                            <div style="display: inline-block;display: flex;padding-left: 1rem;">
+                                                <button type="button" class="btn btn-primary" style="width: 4rem;" onclick="searByWRCTSName()">搜索</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row" style="align-items:center ;">
+                                            <div class="col-2">
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="row" style="align-items: center;">
+                                                    <div class="col-6">
+                                                        <div class="input-group mb-3"
+                                                            style="margin-top:1vw;margin-right:2vw">
+                                                            <input type="text" class="form-control searchInput"
+                                                                onkeyup="this.value=this.value.replace(/\s/g,'')"
+                                                                aria-label="Recipient's username"
+                                                                aria-describedby="button-addon2"
+                                                                style="border-right: 0px;border-radius: 0;">
+                                                            <button
+                                                                class="btn btn-outline-secondary iconfont icon-sousuo"
+                                                                type="button" style="border-left: 0px;
+                                                                border-radius: 0;
+                                                                border-color: #44CEDE;
+                                                                background-color: #44CEDE;color: #eee;"
+                                                                id="button-addon2">搜索</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <button type="button"
+                                                            class="btn btn-primary iconfont icon-xinzeng addFileOne"
+                                                            style="margin-left:.3vw;border-radius: 0;background-color: #4490DE;border-color: #4490DE;color: #eee;"
+                                                            data-bs-toggle="modal" data-bs-target="#newadd">新增</button>
+                                                        <button type="button"
+                                                            class="btn btn-secondary icofont icon-24gl-printer inventoryResults"
+                                                            onclick="inventoryResults()"
+                                                            style="border-radius: 0;background-color: #44DE6F;border-color: #44DE6F;color: #eee;">盘点结果</button>
+                                                        <button type="button"
+                                                            class="btn btn-secondary icofont icon-shangchuandaochu exportFlie"
+                                                            onclick="exportFlie()"
+                                                            style="border-radius: 0;background-color: #44DE6F;border-color: #44DE6F;color: #eee;margin-left: 7.22rem;">导出</button>
+                                                        <button type="button"
+                                                            class="btn btn-secondary iconfont icon-fanhui returnToSuperior"
+                                                            onclick="returnToSuperior()"
+                                                            style="border-radius: 0;background-color: #44B8DE;border-color: #44B8DE;color: #eee;">返回上级</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="height:70vh;margin-left: 1px;">
+                                    <div class="middleline table-responsive" style="height:70vh;">
+                                        <table class="table text-nowrap table-bordered">
+                                            <thead id="dataHead">
+
+                                            </thead>
+                                            <tbody id="dataTable">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--上面的高度为83vh,剩下17vh -->
+                            <div style="height:7vh;margin-left: 2vw;margin-top: .3vw;">
+                                <div style="width: 97%;height:100%" class="row">
+                                    <div class="col-3" style="height:100%;display: flex;align-items: center;">
+                                        <div id="rightNowPosition" style="margin-left: 1vw;color:rgb(184, 184, 184)">
+                                        </div>
+                                    </div>
+                                    <div class="col-9" style="height:100%;display: flex;align-items: center;">
+                                        <div class="row"></div>
+                                        <div class="col-9">
+                                            <div class="pagenation" style="float:right;margin-right:2vw">
+                                                <ul class="pagination1" style="color:rgb(184, 184, 184)">
+                                                    <!-- 分页器加在这里 -->
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-3" style="display: flex;align-items: center;">
+                                            <select id="pageSizeUl" class="form-select"
+                                                aria-label="Default select example"
+                                                style="flex:4;color: rgb(184, 184, 184);">
+                                                <option value="10">10条/页</option>
+                                                <option value="20">20条/页</option>
+                                                <option value="30">30条/页</option>
+                                            </select>
+                                            <div style="flex:2;margin-left: .5vw;color:rgb(184, 184, 184)">跳至</div>
+                                            <input type="number" class="form-control" style="flex:3;margin-right: .5vw;"
+                                                id="changePageInput">
+                                            <div style="flex:1;color:rgb(184, 184, 184)">页</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 点击新增时候出现的modal -->
+        <div class="modal fade" id="newadd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">添加盘点计划<span style="color:red">*</span></h5></h5></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 addInput">
+                            <div class="row" style="align-items: center;">
+                                <div class="col-3">盘点计划名称:</div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control inventoryPlanName">
+                                </div>
+                            </div>
+
+                            <div class="row" style="align-items: center;padding-top: 1.5vh;">
+                                <div class="col-3">计划时间:</div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control inventoryPlanName" id="startTime">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            id="displayModal">取消</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            onclick="addInventoryPlan()">确认添加</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

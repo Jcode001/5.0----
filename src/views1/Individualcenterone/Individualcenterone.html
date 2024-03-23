@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户操作日志</title>
+    <!-- <script th:inline="javascript">
+        var basePath  /*[[${ #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort()}]]*/
+    </script>-->
+    <link rel="stylesheet" th:href="@{/bootstrap-5.1.3-dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/Individualcenterone/Individualcenterone.css}">
+    <link rel="stylesheet" th:href="@{/css/tree.css}">
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <script th:src="@{/bootstrap-5.1.3-dist/js/bootstrap.bundle.js}"></script>
+    <script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+    <script th:src="@{/js/Individualcenterone/Individualcenterone.js}"></script>
+    <script th:src="@{/js/common/common.js}"></script>
+    <script th:src="@{/js/index.js}"></script>
+    <script type="text/javascript"
+        th:src="@{/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js}"></script>
+    <script type="text/javascript"
+        th:src="@{/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+    <link th:href="@{/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/icon/iconfont.css}">
+    
+    <script th:src="@{/js/menuTotal.js}"></script>
+
+
+    <!-- <link rel="stylesheet" href="../../static/css/Individualcenterone/Individualcenterone.css">
+    <link rel="stylesheet" href="../../static/bootstrap-5.1.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/css/index.css">
+    <link rel="stylesheet" href="../../static/css/tree.css">
+
+    <script src="../../static/bootstrap-5.1.3-dist/js/bootstrap.bundle.js"></script>
+    <script src="../../static/js/Individualcenterone/Individualcenterone.js"></script>
+    <script src="../../static/js/jquery-1.11.3.min.js"></script>
+    <script src="../../static/js/index.js"></script> -->
+</head>
+
+<body class="wrapppd">
+    <div class="container-fluid ">
+        <div class="row" style="height:8vh">
+            <headere class="col-12">
+            </headere>
+        </div>
+        <div class="row contentFather" style="height:92vh">
+            <div class=" contentLeft  col-2" style="height:100%">
+                <div style="height:7vh" class="topNavigationBorder" onclick="closeMenu()">
+                    <span class="iconfont icon-zhankaicaidan1 globalMenu" id="Menu">菜单</span>
+                </div>
+            </div>
+            <div class="col-10 contentRight" style="height:100%;width:85%">
+                <div style="height:100%">
+                    <div class="row" style="margin-left:2vw;height: 7vh;margin-left:2vw">
+                        <div class="currentPosition col-12" style="height:100%;">
+                            <span style="margin-left:2vw"> <a href="/toArchiveHome">档案管理> </a><a
+                                    href="#">个人中心</a></span>
+                        </div>
+                    </div>
+                    <!-- 个人中心 -->
+                    <div class="RightHeaderindex">
+                        <!-- 个人中心左侧 -->
+                        <div class="headerindexone">
+                            <div class="headerimglist" id="heraderImgFile">
+                                <img src="https://img1.baidu.com/it/u=1960110688,1786190632&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1686762000&t=69ed7daebe41ded740e5bb3d65e14090"
+                                    class="img-thumbnail" id="teroneimg">
+                            </div>
+                            <div class="headerusername">
+                                <div class="iconfont icon-tongxunlu">用户名称:</div>
+                                <div id="username">admin</div>
+                            </div>
+                            <div class="headerusername">
+                                <div class="iconfont icon-dianhua">手机号码:</div>
+                                <div id="phoneNumber">18235027255</div>
+                            </div>
+                            <div class="headerusername">
+                                <div class="iconfont icon-youxiang">用户邮箱:</div>
+                                <div id="emaillist">286729739@qq.com</div>
+                            </div>
+                            <div class="headerusername">
+                                <div class="iconfont icon-jiaose">所属角色:</div>
+                                <div id="rolename">管理员</div>
+                            </div>
+                            <div class="headerusername">
+                                <div class="iconfont icon-riqi">创建日期:</div>
+                                <div id="Creationdate">2023-6-7 9:18</div>
+                            </div>
+                        </div>
+                        <!-- 个人中心右侧 -->
+                        <div class="headerindextow">
+                            <div class="tab-container">
+                                <ul class="tab-nav">
+                                    <li id="tabone" class="active">基本资料</li>
+                                    <li id="tabtwo">修改密码</li>
+                                    <li id="tabthree">LOGO设置</li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-panel active" style="margin-top: 50px;">
+                                        <div style="display: flex; margin-top:20px;margin-bottom: 20px;">
+                                            <div class="mb-1">
+                                                <span style="color: red;">*</span>
+                                                <label for="Username" class="form-label">用户名称:</label>
+                                                <input type="email" class="form-control" id="Username"
+                                                    placeholder="请输入">
+                                            </div>
+                                            <div class="mb-1" style="margin-left: 17vw;">
+                                                <span style="color: red;">*</span>
+                                                <label for="Mobilephonepassword" class="form-label">手机号码:</label>
+                                                <input type="tel" class="form-control" id="Mobilephonepassword"
+                                                    placeholder="请输入">
+                                            </div>
+                                        </div>
+                                        <div style="display: flex;">
+                                            <div class="mb-1">
+                                                <span style="color: red;">*</span>
+                                                <label for="mailbox" class="form-label">邮箱:</label>
+                                                <input type="email" class="form-control" id="mailbox" placeholder="请输入">
+                                            </div>
+                                            <div class="mb-1" style="margin-left: 17vw;">
+                                                <label for="sex" class="form-label">性别:</label>
+                                                <select class="form-select" id="sex"
+                                                    aria-label="Default select example">
+                                                    <option value="1" selected>男</option>
+                                                    <option value="0">女</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-panel" style="margin-top: 50px;">
+                                        <div class="mb-3">
+                                            <span style="color: red;">*</span>
+                                            <label for="oldpassword" class="form-label">旧密码:</label>
+                                            <input type="password" style="width: 100%;" class="form-control"
+                                                id="oldpassword" placeholder="请输入旧密码">
+                                            <div style="display: inline" id="tip1"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <span style="color: red;">*</span>
+                                            <label for="passwordone" class="form-label">新密码:</label>
+                                            <input type="password" style="width: 100%;" class="form-control"
+                                                id="passwordone" placeholder="请输入6到18位新密码">
+                                            <div style="display: inline" id="tip2"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <span style="color: red;">*</span>
+                                            <label for="passwordtow" class="form-label">确认新密码:</label>
+                                            <input type="password" style="width: 100%;" class="form-control"
+                                                id="passwordtow" placeholder="请再次输入新密码">
+                                            <div style="display: inline" id="tip3"></div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-panel" style="margin-top: 50px;">
+                                        <div class="mb-3">
+                                            <label for="Systemname" class="form-label">系统名称:</label>
+                                            <input type="email" style="width: 100%;" class="form-control"
+                                                id="Systemname" placeholder="请输入">
+                                        </div>
+                                    </div>
+                                    <div class="tab-headerbutton" style="position: absolute;left: 82%;top: 91%;">
+
+                                        <button style="width:100px;margin-right: 10px;" type="button"
+                                            class="btn btn-outline-primary" onclick="personagesave()">保存</button>
+
+                                        <button style="width:100px; margin-right: 10px;" type="button"
+                                            class="btn btn-outline-primary" onclick="Jumptohomepage()">关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

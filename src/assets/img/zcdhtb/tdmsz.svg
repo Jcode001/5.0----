@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="矩形_42" data-name="矩形 42" class="cls-1" d="M57,393h1v1H57v-1Zm-1,1h1v1H56v-1Zm-1,1h1v1H55v-1Zm4-2h1v1H59v-1Zm1,1h1v1H60v-1Zm1,1h1v1H61v-1Zm-3-3h1v8H58v-8Zm-6,0h1v14H52V392Zm12,0h1v14H64V392ZM51,405H66v2H51v-2Z" transform="translate(-51 -392)"/>
+</svg>

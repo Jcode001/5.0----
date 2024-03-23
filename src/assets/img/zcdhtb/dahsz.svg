@@ -1,0 +1,12 @@
+<svg id="_-h-组_18" data-name="-h-组 18" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="15" viewBox="0 0 16 15">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <image id="图层_13" data-name="图层 13" x="5" y="5" width="11" height="10" xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAKCAYAAABi8KSDAAAAuklEQVQYlW2QMQoCQQxFv7KFYidY6A3EThQsPIK22lvZeQPxAl7ByivYCYKdpY1gpQewWmGLRXgyS8Q4GAgz+f/P/CQC4uwCN2AXc//EF74x81xZvzGV1JZ0NrTj2VLxvd0l5ZISSXVJPUmZpKqkfaFwNhszXzlsaVgz7nkIjKP+5yY+ePEa2P4ZNuTRHvRDMbLiCdSAxAkbwMD4ewCuVmRACuR2toAF8PgsMognRr7cfkOEgSvmmAKnN7uyMzYvhcnFAAAAAElFTkSuQmCC"/>
+  <path id="矩形_45_拷贝4" data-name="矩形 45 拷贝4" class="cls-1" d="M53,428H63a2,2,0,0,1,2,2v11a2,2,0,0,1-2,2H53a2,2,0,0,1-2-2V430A2,2,0,0,1,53,428Zm0,4h9v2H53v-2Zm0,4h5v2H53v-2Zm8.859-8.219L70.656,443H53.063Z" transform="translate(-51 -428)"/>
+</svg>

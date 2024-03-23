@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>档案门类</title>
+    <link rel="stylesheet" th:href="@{/bootstrap-5.1.3-dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/configuration/newTemplatePage.css}">
+    <link rel="stylesheet" th:href="@{/css/tree.css}">
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+    <script th:src="@{/js/treescroll.min.js}"></script>
+    <script th:src="@{/js/configuration/newTemplatePage.js}"></script>
+    <script th:src="@{/js/index.js}"></script>
+    <script th:src="@{/js/common/common.js}"></script>
+    <link rel="stylesheet" th:href="@{/icon/iconfont.css}">
+    <script th:src="@{/js/menuTotal.js}"></script>
+    <script th:src="@{/js/axios.js}"></script>
+    <script type="text/javascript"
+        th:src="@{/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js}"></script>
+    <script type="text/javascript"
+        th:src="@{/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+    <link th:href="@{/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css}" rel="stylesheet">
+
+    <!-- <link rel="stylesheet" href="/static/bootstrap-5.1.3-dist/css/bootstrap.min.css">
+    <script src="/static/js/jquery-1.11.3.min.js"></script>
+    <script src="/static/js/configuration/newTemplatePage.js"></script>
+    <script src="/static/js/index.js"></script>
+    <script src="/static/js/common/common.js"></script>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/tree.css">
+    <link rel="stylesheet" href="/static/css/configuration/newTemplatePage.css">
+    <link rel="stylesheet" href="/static/icon/iconfont.css">
+    <script src="/static/js/menuTotal.js"></script> -->
+</head>
+
+<body class="wrapppd">
+    <div id="app">
+        <div class="row" style="height:8vh">
+            <headere class="col-12" style="height:8vh">
+            </headere>
+        </div>
+        <div class="row contentFather" style="height:92vh">
+            <div class="contentLeft col-2" style="height:100%">
+                <div style="height:7vh" class="topNavigationBorder" onclick="closeMenu()">
+                    <span class="iconfont icon-zhankaicaidan1 globalMenu" id="Menu">菜单</span>
+                </div>
+            </div>
+            <div class="col-10 contentRight" style="height:100%;width:85%">
+                <div id="functionButton" style="height:100%">
+                    <div class="row" style="margin-left:2vw;height:7vh">
+                        <div class="currentPosition col-12" style="height:100%;">
+                            <span style="margin-left:2vw"> <a href="/toArchiveHome">智慧档案管理总平台> </a><a
+                                    href="#">著录项设置设置</a></span>
+                        </div>
+                    </div>
+                    <div style="height:7vh;margin-left: 2vw;">
+                        <div class="row">
+                            <div class="col-6" v-if="pageChoose">
+                                <button type="button" class="btn btn-primary" @click="addNewTr()">新增</button>
+                                <button type="button" class="btn btn-primary">导入</button>
+                                <button type="button" class="btn btn-primary">导出</button>
+                                <button type="button" class="btn btn-primary"
+                                    @click="tempalteListOperate()">模板设置</button>
+                            </div>
+                            <div class="col-6" v-else="pageChoose">
+                                <button type="button" class="btn btn-primary" @click="backToTemplateZ()">返回</button>
+                                <button type="button" class="btn btn-primary" @click="templateAdd()"
+                                    v-if="addButtonDisplayNone">新增</button>
+                                <button type="button" class="btn btn-primary" @click="application()"
+                                    v-if="checkedListIdInfo.length!=0">应用</button>
+                            </div>
+                            <div class="col-6">
+                                <div style="width:100%;display: flex;">
+                                    <div style="flex:1"></div>
+                                    <div style="flex:1">
+                                        <div style="display: flex;align-items: center;" v-if="addButtonDisplayNone">
+                                            <input type="text" class="form-control searchInput" v-model="searchInput">
+                                            <button class="iconfont icon-sousuo btn btn-primary"
+                                                @click="search()">查询</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row changeScoll table-responsive">
+                        <div style="max-height: 70vh;">
+                            <table class="table text-nowrap table-bordered" style="width:93%;margin-left:2vw"
+                                v-if="pageChoose">
+                                <thead>
+                                    <th width="5%"><input type="checkbox" :checked="allChecked"
+                                            @click="allCheckedOrAllNoChecked()">全选</th>
+                                    <th>模板名称</th>
+                                    <th>模板介绍</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,index) in changeInput" :index="index"
+                                        @click="eventListener(index)">
+                                        <td><input type="checkbox" :checked="currentOperationDomInfo[index].isChecked"
+                                                @click.stop="chooseInput(index)"></td>
+                                        <td v-on:dblclick="chnageInput(index,index1)" v-for="(item1,index1) in item"
+                                            :id="index1" style="width:35rem">
+                                            <span v-if="item1.change">{{item1.text}}</span><input type="text"
+                                                v-else="item1.change" v-model="item1.text" @click.stop
+                                                class="form-control">
+                                        </td>
+                                        <td v-if="!currentOperationDomInfo[index].addInfo">
+                                            <div v-if="!currentOperationDomInfo[index].modify">
+                                                <button class="btn"
+                                                    @click.stop="checkTemplateGroupInfo(index)">查看</button>
+                                                <button class="btn" @click.stop="chooseToModify(index)">修改</button>
+                                                <button class="btn" @click.stop="deleteClassify(index)">删除</button>
+                                            </div>
+                                            <div v-else="!currentOperationDomInfo[index].modify">
+                                                <button @click.stop="confirmToModify(index)">确认修改</button>
+                                                <button @click.stop="cancalModify(index)">取消</button>
+                                            </div>
+                                        </td>
+                                        <td v-else="!currentOperationDomInfo[index].addInfo">
+                                            <button class="btn" @click.stop="confirmToAdd(index)">确认添加</button>
+                                            <button class="btn" @click.stop="cancalToAdd(index)">取消</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table text-nowrap table-bordered" style="width:93%;margin-left:2vw"
+                                v-else="pageChoose">
+                                <thead>
+                                    <th width="5%"><input type="checkbox" @click="TLchekedAll()"
+                                            v-model="TLallChecked">全选</th>
+                                    <th>著录项名称</th>
+                                    <th>著录项名</th>
+                                    <th>数据类型</th>
+                                    <th>著录项长度</th>
+                                    <th>小数点位数</th>
+                                    <th>字典设置</th>
+                                    <th>表单中是否显示该著录项</th>
+                                    <th>列表中是否显示该著录项</th>
+                                    <th>rfid中是否显示该著录项</th>
+                                    <th>是否用在查询</th>
+                                    <th>默认展示此著录项</th>
+                                    <th>是否为必填项</th>
+                                    <th>默认值</th>
+                                    <th>操作</th>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,index) in TLchangeInput" :key="addIndex+index"
+                                        @click="clickEventListen(index)">
+                                        <td><input type="checkbox" :id="item[0].id"
+                                                v-model="TLbeforeChange[index].isChecked">
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div v-if="item[0].change">
+                                                <input type="text" v-model="item[0].showColumnName"
+                                                    :disabled="item[0].ifDisable" class="form-control" @click.stop>
+                                            </div>
+                                            <div v-else="item[0].change">
+                                                <span>{{item[0].showColumnName}}</span>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div v-if="item[1].change">
+                                                <input type="text" v-model="item[1].columnName"
+                                                    :disabled="item[1].ifDisable" class="form-control" @click.stop>
+                                            </div>
+                                            <div v-else="item[1].change">
+                                                <span>{{item[1].columnName}}</span>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div>
+                                                <span>
+                                                    <select v-model="item[2].columnType" :disabled="item[2].ifDisable"
+                                                        class="form-select selectWidth"
+                                                        @change="selectDecimalSeparator(event,index,item[2].columnType)">
+                                                        <option value="int">int-整数类型</option>
+                                                        <option value="bigint">bigint-大整数</option>
+                                                        <option value="varchar">varchar-文本</option>
+                                                        <option value="text">text-大文本</option>
+                                                        <option value="double">double-带小数点数值</option>
+                                                        <option value="tinyint">tinyint-是否</option>
+                                                        <option value="datetime">datetime-时间类型</option>
+                                                        <option value="select">select-字典类型</option>
+                                                    </select>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div v-if="item[1].change">
+                                                <input type="text" v-model="item[3].columnTypeLength"
+                                                    :disabled="item[3].ifDisable" class="form-control">
+                                            </div>
+                                            <div v-else="item[1].change">
+                                                <span>{{item[3].columnTypeLength}}</span>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div v-if="item[1].change">
+                                                <input type="text" v-model="item[4].regularColumn"
+                                                    :disabled="item[4].ifDisable" class="form-control">
+                                            </div>
+                                            <div v-else="item[1].change">
+                                                <span>{{item[4].regularColumn}}</span>
+                                            </div>
+                                        </td>
+                                        <!-- 这里是字典设置 -->
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div v-if="item[1].change">
+                                                <input type="text" v-model="item[5].dictionaryType"
+                                                    :disabled="item[5].ifDisable" class="form-control"
+                                                    style="width: 8rem;" list="datalistOptions"
+                                                    v-on:input="changeDictionary(this,index)"
+                                                    @change.stop="dictionaryOnChange(index)">
+                                                <datalist id="datalistOptions"></datalist>
+                                            </div>
+                                            <div v-else="item[1].change">
+                                                <span style="width: 8rem;">{{item[5].dictionaryType}}</span>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div>
+                                                <select v-model="item[6].showForm" :disabled="item[6].ifDisable"
+                                                    class="form-select" @click.stop>
+                                                    <option value="true">是</option>
+                                                    <option value="false">否</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div>
+                                                <select v-model="item[7].showWatch" :disabled="item[7].ifDisable"
+                                                    class="form-select" @click.stop>
+                                                    <option value="true">是</option>
+                                                    <option value="false">否</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div>
+                                                <select v-model="item[8].requiredFields" :disabled="item[8].ifDisable"
+                                                    class="form-select" @click.stop>
+                                                    <option value="true">是</option>
+                                                    <option value="false">否</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div>
+                                                <select v-model="item[9].useForQuery" :disabled="item[9].ifDisable"
+                                                    class="form-select" @click.stop>
+                                                    <option value="true">是</option>
+                                                    <option value="false">否</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div>
+                                                <select v-model="item[10].rfidUse" :disabled="item[10].ifDisable"
+                                                    class="form-select" @click.stop>
+                                                    <option value="true">是</option>
+                                                    <option value="false">否</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)">
+                                            <div>
+                                                <select v-model="item[11].principalColumn"
+                                                    :disabled="item[11].ifDisable" class="form-select" @click.stop>
+                                                    <option value="true">是</option>
+                                                    <option value="false">否</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)"
+                                            v-if="TLdefaultChange=='default'">
+                                            <div v-if="item[1].change">
+                                                <input type="text" v-model="item[12].defaultValue"
+                                                    :disabled="item[12].ifDisable" class="form-control" @click.stop
+                                                    key="kijs122">
+                                            </div>
+                                            <div v-else="item[1].change">
+                                                <span>{{item[12].defaultValue}}</span>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)"
+                                            v-else-if="TLdefaultChange=='select'">
+                                            <div v-if="item[1].change">
+                                                <select type="text" v-model="item[12].defaultValue"
+                                                    :disabled="item[12].ifDisable" class="form-control"
+                                                    :class="selectDictionary+index" @click.stop key="likss21">
+                                                </select>
+                                            </div>
+                                            <div v-else="item[1].change">
+                                                <span>{{item[12].defaultValue}}</span>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)"
+                                            v-else-if="TLdefaultChange=='tinyint'">
+                                            <div v-if="item[1].change">
+                                                <select type="text" v-model="item[12].defaultValue"
+                                                    :disabled="item[12].ifDisable" class="form-control" @click.stop
+                                                    key="likss132">
+                                                    <option value="1">是</option>
+                                                    <option value="0">否</option>
+                                                </select>
+                                            </div>
+                                            <div v-else="item[1].change">
+                                                <span>{{item[12].defaultValue}}</span>
+                                            </div>
+                                        </td>
+                                        <td v-on:dblclick.stop="changeSpanToInput(index)" v-else>
+                                            <div v-if="item[1].change">
+                                                <input type="text" v-model="item[12].defaultValue"
+                                                    :disabled="item[12].ifDisable" class="form-control"
+                                                    :valueIndex="valueIndex+index" @click.stop key="kijsssd">
+                                            </div>
+                                            <div v-else="item[1].change">
+                                                <span>{{item[12].defaultValue}}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div v-if="!TLbeforeChange[index].addInfo">
+                                                <div v-if="!TLbeforeChange[index].modify">
+                                                    <button type="button" class="btn"
+                                                        @click.stop="templateClick(index)">修改</button>
+                                                    <button type="button" class="btn"
+                                                        @click.stop="templateDelete(index)">删除</button>
+                                                </div>
+                                                <div v-else="!TLbeforeChange[index].modify">
+                                                    <button type="button" class="btn"
+                                                        @click.stop="templateConfirmModify(index)">确认修改</button>
+                                                    <button type="button" class="btn"
+                                                        @click.stop="templateCancalModify(index)">取消</button>
+                                                </div>
+                                            </div>
+                                            <div v-else="!TLbeforeChange[index].addInfo">
+                                                <button type="button" class="btn"
+                                                    @click.stop="templateConfirmAdd(index)">确认添加</button>
+                                                <button type="button" class="btn"
+                                                    @click.stop="templateCancalAdd(index)">取消</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row bottomMessage" style="height:7vh;margin-left: 1.8vw;" v-if="addButtonDisplayNone">
+                        <div class="col-6">
+                            <div
+                                style="float: left;width: 8.375rem;margin-top: 0.25rem;height: 2.5rem;line-height: 2.5rem;color: rgb(184, 184, 184);">
+                                <span style="margin-left:2vw">共<span
+                                        id="totalNumberOfDisplaysAtTheBottom"></span>条:每页</span>
+                                <select class="form-select" aria-label="Default select example"
+                                    style="width: 5rem;position:relative;top: -2.2rem;left: 8.625rem;height:2rem;color:rgb(184,184,184)"
+                                    id="pageSizeUl">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                </select>
+                            </div>
+                            <div class="pagenum" style="color:rgb(184,184,184)">已选择0项</div>
+                        </div>
+                        <div class="col-6">
+                            <div style="float: right;margin-top: 0.54rem;" class="showPageMessage"></div>
+                            <div style="float: right;margin-top: 0.25rem;width: 10rem;margin-right:2rem ;">
+                                <div class="belike">
+                                    <input class="form-control form-control-sm" type="text" placeholder="" id="jumpVal"
+                                        aria-label=".form-control-sm example" style="width: 5rem;"
+                                        onkeyup="this.value=this.value.replace(/[^0-9]/g,'')">
+                                    <button type="button" class="col-5  btn-primary amend"
+                                        style="width: 3rem;font-size: 0.8rem;margin-left: 1rem;"
+                                        onclick="jumpToPage()">GO
+                                    </button>
+                                </div>
+                                <div class="pagenation">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination1">
+                                            <li class="page-item needToRemove" @click="moveToLeft()">
+                                                <a class="page-link" href="#" aria-label="Previous"
+                                                    style="color:rgb(184,184,184)">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li :class="item == limit.currentPage?'page-item active needToRemove':'page-item needToRemove'"
+                                                v-for="(item,index) in limit.end" :index="index"
+                                                v-if="limit.end>=item>=limit.start">
+                                                <a style="color:rgb(184,184,184)" class="page-link"
+                                                    href="#">{{item}}</a>
+                                            </li>
+                                            <li class="page-item needToRemove" @click="moveToRight()">
+                                                <a class="page-link" href="#" aria-label="Next"
+                                                    style="color:rgb(184,184,184)">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <script src="../../static/js/vue.min.js"></script> -->
+    <script th:src="@{/js/vue.min.js}"></script>
+    <script>
+        const vm = new Vue({
+            el: '#app',
+            mounted() {
+                axios.post(`/templateGroup/page/${this.everySituationCurrentPageInfo[0]}/${this.everySituationCurrentPagesize[0]}`).then(res => {
+                    if (res.data.code != 200) {
+                        failedCallback(res.data.message);
+                        return
+                    }
+                    successfulCallback(res.data.message);
+                    this.situation = 'one'
+                    this.drawingTemplateList(res);
+                    this.drawingPageNation(res.data.currentPageNumber, res.data.pageCount)
+                })
+            },
+            data() {
+                return {
+                    // 添加index
+                    addIndex: 'addIndex',
+                    // 拿到这个默认值
+                    valueIndex: 'valueIndex',
+                    selectDictionary: 'selectDictionary',
+                    pageNationList: [],
+                    // 控制双击span和input来回切换和模板组名和介绍的显示
+                    changeInput: [],
+                    // 核对以及控制点击修改和添加时候的按钮变动方式
+                    currentOperationDomInfo: [],
+                    // 核对修改的值和储存返回回来数据的id
+                    beforeChange: [],
+                    // 绑定搜索input
+                    searchInput: "",
+                    // 控制显示模板组页面还是具体模板列表页面
+                    pageChoose: true,
+                    // 储存具体模板页面的列表信息
+                    templateListInfo: [],
+                    // 选中input之后推送元素进来,支持分页选择功能,在点击分页的时候需要向这个localstoreage中存储,执行完毕之后再拿出来赋值回来
+                    checkedListIdInfo: [],
+                    // 控制全选全不选input
+                    allChecked: false,
+                    // 内页   控制双击span和input来回切换和模板组名和介绍的显示
+                    TLchangeInput: [],
+                    // 内页   核对以及控制点击修改和添加时候的按钮变动方式
+                    TLOldOperationDomInfo: [],
+                    // 内页   核对修改的值和储存返回回来数据的id
+                    TLbeforeChange: [],
+                    // 内页   绑定搜索input
+                    TLsearchInput: "",
+                    // 内页   控制显示模板组页面还是具体模板列表页面
+                    TLpageChoose: true,
+                    // 内页   储存具体模板页面的列表信息
+                    TLtemplateListInfo: [],
+                    // 内页   选中input之后推送元素进来,支持分页选择功能,在点击分页的时候需要向这个localstoreage中存储,执行完毕之后再拿出来赋值回来
+                    TLcheckedListIdInfo: [],
+                    // 内页   控制全选全不选input
+                    TLallChecked: false,
+                    // 内页   控制select点击之后改变default值,'default','datetime','select'
+                    TLdefaultChange: [],
+                    // 控制冒泡,start为可以冒泡,end为不可以
+                    stopMP: 'start',
+                    limit: {
+                        start: '',
+                        end: '',
+                        currentPage: '',
+                        situation: 'one', //one走已进入页面的逻辑,two走进入模板页面逻辑,three走选中模板组查看其中模板逻辑
+                        pageLimit: ''
+                    },
+                    // 不同情况下的页位置
+                    everySituationCurrentPageInfo: [1, 1, 1],
+                    // 三种不同情况下的页大小
+                    everySituationCurrentPagesize: [10, 10, 10],
+                    // 点击查看时候让新增按钮消失
+                    addButtonDisplayNone: true
+                }
+            },
+            methods: {
+                backToTemplateZ() {
+                    let flag = false
+                    this.TLbeforeChange.forEach(item => {
+                        if (item.addInfo || item.modify) {
+                            failedCallback('请结束当前操作再返回')
+                            flag = true
+                        }
+                    })
+                    if (flag) {
+                        return
+                    }
+                    this.pageChoose = true  //返回模板组页面
+                    this.limit.situation = 'one' //切换状态,让分页选择的时候进入到上一个页面的分页器渲染
+                    this.addButtonDisplayNone = true
+
+                },
+                // 点击取消添加按钮
+                cancalToAdd(index) {
+                    this.changeInput.splice(0, 1)
+                    this.beforeChange.splice(0, 1)
+                    this.currentOperationDomInfo.splice(0, 1)
+                },
+                // 点击修改按钮
+                chooseToModify(index) {
+                    this.currentOperationDomInfo[index].modify = !this.currentOperationDomInfo[index].modify
+                    this.changeInput[index].forEach(item => {
+                        item.change = false
+                    })
+                },
+                // 点击取消按钮,还原设置
+                cancalModify(index) {
+                    this.currentOperationDomInfo[index].modify = false;
+                    this.changeInput[index].forEach(item => {
+                        item.change = true
+                    })
+                },
+                // 点击全选全不选
+                allCheckedOrAllNoChecked() {
+                    this.allChecked = !this.allChecked;
+                    if (this.allChecked) {
+                        for (let i = 0; i < this.currentOperationDomInfo.length; i++) {
+                            this.currentOperationDomInfo[i].isChecked = true;
+                            if (this.beforeChange[i][2] == -1) continue
+                            let index = this.checkedListIdInfo.indexOf(this.beforeChange[i][2])
+                            if (index == -1) {
+                                this.checkedListIdInfo.push(this.beforeChange[i][2])
+                            }
+                        }
+                    } else {
+                        for (let i = 0; i < this.currentOperationDomInfo.length; i++) {
+                            this.currentOperationDomInfo[i].isChecked = false;
+                            if (this.beforeChange[i][2] == -1) continue
+                            let index = this.checkedListIdInfo.indexOf(this.beforeChange[i][2])
+                            this.checkedListIdInfo.splice(index, 1)
+                        }
+                    }
+                },
+                // 点击input框
+                chooseInput(index) {
+                    this.currentOperationDomInfo[index].isChecked = !this.currentOperationDomInfo[index].isChecked
+                    let id = this.beforeChange[index][2]
+                    if (this.currentOperationDomInfo[index].isChecked) {
+                        let num = this.checkedListIdInfo.indexOf(id)
+                        if (num == -1) {
+                            this.checkedListIdInfo.push(id);
+                        }
+                    } else {
+                        let num = this.checkedListIdInfo.indexOf(id)
+                        if (num != -1) {
+                            this.checkedListIdInfo.splice(num, 1);
+                        }
+                    }
+                    let flag = true;
+                    this.currentOperationDomInfo.forEach(item => {
+                        if (!item.isChecked) {
+                            flag = false
+                        }
+                    })
+                    if (flag) {
+                        this.allChecked = true
+                        return
+                    }
+                    this.allChecked = false
+                },
+                // 跳转到模板选中的模板的列表页面
+                tempalteListOperate() {
+                    if (this.checkedListIdInfo.length == 0 || this.checkedListIdInfo.length == 1) {
+                        axios.get(`/archiveColumnTemplate/page/${this.everySituationCurrentPageInfo[1]}/${this.everySituationCurrentPagesize[1]}`).then(res => {
+                            if (res.data.code != 200) {
+                                failedCallback(res.data.message)
+                                this.limit.situation = 'two' //切换状态
+                                this.pageChoose = false;  //保持页面在模板内页
+                                this.drawingPageNation(res.data.currentPageNumber, res.data.pageCount) //重新渲染分页器
+                                this.TLchangeInput = []  //置空数组,放置重复渲染
+                                this.TLOldOperationDomInfo = []
+                                this.TLbeforeChange = []
+                                // 阻止相互引用进行数组或对象的深拷贝
+                                this.copyStartTLListInfo(res, this.TLchangeInput)
+                                this.copyStartTLListInfo(res, this.TLOldOperationDomInfo)
+                                this.TLchangeInput.forEach(item => {
+                                    let obj = {
+                                        modify: false,
+                                        addInfo: false,
+                                        isChecked: false,
+                                        id: item[0].id
+                                    }
+                                    if (item[2].columnType == 'int' ||
+                                        item[2].columnType == 'bigint' ||
+                                        item[2].columnType == 'varchar' ||
+                                        item[2].columnType == 'double') {
+                                        this.TLdefaultChange.push('default')
+                                    } else if (item[2].columnType == 'tinyint') {
+                                        if (item[12].defaultValue == '0') {
+                                            item[12].defaultValue = '否'
+                                        } else {
+                                            item[12].defaultValue = '是'
+                                        }
+                                        this.TLdefaultChange.push('select')
+                                    } else if (item[2].columnType == 'datetime') {
+                                        this.TLdefaultChange.push('datetime')
+                                    } else if (item[2].columnType == 'select') {
+                                        axios.get(`/dictionary/getDictionaryByType?type=${item[5].dictionaryType}`).then(res => {
+                                            if (res.data.code != 200) {
+                                                failedCallback(res.data.message)
+                                                return
+                                            }
+                                            res.data.data.forEach(item1 => {
+                                                if (item1.id == item[12].defaultValue) {
+                                                    item[12].defaultValue = item1.value
+                                                }
+                                            })
+                                        })
+                                    } else {
+                                        this.TLdefaultChange.push('default')
+                                        item[12].ifDisable = true
+                                    }
+                                    if (this.TLcheckedListIdInfo.indexOf(item[0].id) != -1) {
+                                        obj.isChecked = true
+                                    }
+                                    this.TLbeforeChange.push(obj)
+                                })
+                                return
+                            }
+                            successfulCallback(res.data.message)
+                            this.limit.situation = 'two' //切换状态
+                            this.pageChoose = false;  //保持页面在模板内页
+                            this.drawingPageNation(res.data.currentPageNumber, res.data.pageCount) //重新渲染分页器
+                            this.TLchangeInput = []  //置空数组,放置重复渲染
+                            this.TLOldOperationDomInfo = []
+                            this.TLbeforeChange = []
+                            // 阻止相互引用进行数组或对象的深拷贝
+                            this.copyStartTLListInfo(res, this.TLchangeInput)
+                            this.copyStartTLListInfo(res, this.TLOldOperationDomInfo)
+                            this.TLchangeInput.forEach(item => {
+                                let obj = {
+                                    modify: false,
+                                    addInfo: false,
+                                    isChecked: false,
+                                    id: item[0].id
+                                }
+                                if (item[2].columnType == 'int' ||
+                                    item[2].columnType == 'bigint' ||
+                                    item[2].columnType == 'varchar' ||
+                                    item[2].columnType == 'double') {
+                                    this.TLdefaultChange.push('default')
+                                } else if (item[2].columnType == 'tinyint') {
+                                    if (item[12].defaultValue == '0') {
+                                        item[12].defaultValue = '否'
+                                    } else {
+                                        item[12].defaultValue = '是'
+                                    }
+                                    this.TLdefaultChange.push('select')
+                                } else if (item[2].columnType == 'datetime') {
+                                    this.TLdefaultChange.push('datetime')
+                                } else if (item[2].columnType == 'select') {
+                                    axios.get(`/dictionary/getDictionaryByType?type=${item[5].dictionaryType}`).then(res => {
+                                        if (res.data.code != 200) {
+                                            failedCallback(res.data.message)
+                                            return
+                                        }
+                                        res.data.data.forEach(item1 => {
+                                            if (item1.id == item[12].defaultValue) {
+                                                item[12].defaultValue = item1.value
+                                            }
+                                        })
+                                    })
+                                } else {
+                                    this.TLdefaultChange.push('default')
+                                    item[12].ifDisable = true
+                                }
+                                if (this.TLcheckedListIdInfo.indexOf(item[0].id) != -1) {
+                                    obj.isChecked = true
+                                }
+                                this.TLbeforeChange.push(obj)
+                            })
+                        })
+                    } else {
+                        failedCallback('请确定一个组或不选组')
+                        return
+                    }
+                },
+                copyStartTLListInfo(res, needToOperateObj) {
+                    for (let i = 0; i < res.data.data.length; i++) {
+                        let arr = [
+                            { showColumnName: null, ifDisable: false, id: null, change: false },
+                            { columnName: null, ifDisable: true, id: null, change: false },
+                            { columnType: null, ifDisable: true, id: null, change: false },
+                            { columnTypeLength: null, ifDisable: true, id: null, change: false },
+                            { regularColumn: null, ifDisable: true, id: null, change: false },
+                            { dictionaryType: null, ifDisable: true, id: null, change: false },
+                            { showForm: null, ifDisable: false, id: null, change: false },
+                            { showWatch: null, ifDisable: false, id: null, change: false },
+                            { requiredFields: null, ifDisable: false, id: null, change: false },
+                            { useForQuery: null, ifDisable: false, id: null, change: false },
+                            { rfidUse: null, ifDisable: false, id: null, change: false },
+                            { principalColumn: null, ifDisable: false, id: null, change: false },
+                            { defaultValue: null, ifDisable: false, id: null, change: false }
+                        ]
+                        let item = false
+                        arr.forEach(item => {
+                            for (const key in item) {
+                                if (key != "ifDisable" &&
+                                    key != "id" &&
+                                    key != "change") {
+                                    if (res.data.data[i][key] == undefined) {
+                                        item[key] = ""
+                                    } else {
+                                        item[key] = res.data.data[i][key]
+                                    }
+                                    if (key == "columnType" && item[key] == "select") {
+                                        arr[5].ifDisable = false
+                                    } else if (key == "columnType" && item[key] == "double") {
+                                        arr[3].ifDisable = false
+                                        arr[4].ifDisable = false
+                                    } else if (key == "columnType" && item[key] == "int" ||
+                                        key == "columnType" && item[key] == "bigint" ||
+                                        key == "columnType" && item[key] == "varchar") {
+                                        arr[3].ifDisable = false
+                                    }
+                                }
+                            }
+                            item.id = res.data.data[i].id
+                        })
+                        let newarr = arr[3].columnTypeLength.split(',')
+                        if (newarr.length == 2) {
+                            arr[3].columnTypeLength = newarr[0]
+                            arr[4].regularColumn = newarr[1]
+                        }
+                        needToOperateObj.push(arr)
+                    }
+                },
+                search() {
+                    if (this.searchInput.replace(/\s*/g, '') == "") {
+                        axios.post(`/templateGroup/page/1/10`).then(res => {
+                            if (res.data.code != 200) {
+                                failedCallback(res.data.message)
+                                return
+                            }
+                            successfulCallback(res.data.message);
+                            this.drawingTemplateList(res)
+                        })
+                        return
+                    }
+                    if (this.situation == 'one') {
+                        axios.post(`/templateGroup/page/1/10`, { name: this.searchInput }).then(res => {
+                            if (res.data.code != 200) {
+                                failedCallback(res.data.message)
+                                return
+                            }
+                            successfulCallback(res.data.message);
+                            this.drawingTemplateList(res)
+                        })
+                    } else if (this.situation == 'two') {
+                        axios.get(`/templateGroup/page/1/10/${this.searchInput}`).then(res => {
+                            if (res.data.code != 200) {
+                                failedCallback(res.data.message)
+                                return
+                            }
+                            successfulCallback(res.data.message);
+                            this.drawingTemplateList(res)
+                        })
+                    }
+
+                },
+                // 渲染模板列表的复用函数
+                drawingTemplateList(res) {
+                    this.changeInput = [];
+                    this.currentOperationDomInfo = [];
+                    this.beforeChange = [];
+                    for (let i = 0; i < res.data.data.length; i++) {
+                        let arr = [{ change: true, text: res.data.data[i].name }, { change: true, text: res.data.data[i].introduce }]
+                        this.changeInput.push(arr);
+                        let arr1 = [{ text: res.data.data[i].name }, { text: res.data.data[i].introduce }, res.data.data[i].id]
+                        this.beforeChange.push(arr1)
+                        let arr2 = { addInfo: false, modify: false, isChecked: false }
+                        this.currentOperationDomInfo.push(arr2)
+                    }
+                },
+                // 点击删除
+                deleteClassify(index) {
+                    if (!confirm('是否删除此模板')) {
+                        return
+                    }
+                    axios.post(`/templateGroup/delete/${this.beforeChange[index][2]}`).then(res => {
+                        if (res.data.code != 200) {
+                            failedCallback(res.data.message);
+                            return
+                        }
+                        successfulCallback(res.data.message)
+                        setTimeout(() => { location.reload(); }, 500)
+                    })
+                },
+                // 点击确认修改
+                confirmToModify(index) {
+                    this.currentOperationDomInfo[index].modify = !this.currentOperationDomInfo[index].modify;
+                    let obj = {
+                        id: this.beforeChange[index][2],
+                        name: this.changeInput[index][0].text,
+                        introduce: this.changeInput[index][1].text
+                    };
+                    axios.post('/templateGroup/update', obj).then(res => {
+                        if (res.data.code != 200) {
+                            failedCallback(res.data.message)
+                            return
+                        }
+                        successfulCallback(res.data.message)
+                    })
+                },
+                // 确认添加
+                confirmToAdd(index) {
+                    let falg = false
+                    this.changeInput[index].forEach(item => {
+                        if (item.text.replace(/^\s*/g, "") == "") {
+                            falg = true
+                        }
+                    })
+                    if (falg) {
+                        failedCallback('请填写好所有信息');
+                        return
+                    }
+                    let obj = {
+                        introduce: `${this.changeInput[index][1].text}`,
+                        name: `${this.changeInput[index][0].text}`
+                    }
+                    axios.post(`/templateGroup/save`, obj).then(res => {
+                        console.log(res);
+                        if (res.data.code != 200) {
+                            failedCallback(res.data.message)
+                        }
+                        successfulCallback('添加成功');
+                        setTimeout(() => { location.reload(); }, 500)
+                    })
+                },
+                // 点击添加按钮
+                addNewTr() {
+                    if (this.currentOperationDomInfo.length != 0) {
+                        if (this.currentOperationDomInfo[0].addInfo) {
+                            failedCallback('请添加好数据后再点击')
+                            return
+                        }
+                    }
+                    // 这个逻辑本来应该将this.beforeChange页拿过来判断的,但是这里一想后续不可能所有的操作都不刷新
+                    // 就打算直接在添加成功之后刷新页面了
+                    // 这里也证明了vue的组件化的好处,如果这里能够使用组件化的话就能够完全解决这个问题,添加之后直接刷新table组件就可以了
+                    // 这里是单页面组件,存在弊端
+                    let newTr = [{ change: false, text: "" }, { change: false, text: "" }]
+                    this.changeInput = [newTr, ...this.changeInput]
+                    let arr1 = [{ text: "" }, { text: "" }, -1]
+                    this.beforeChange = [arr1, ...this.beforeChange]
+                    let arr2 = { addInfo: true, modify: false, isChecked: false }
+                    this.currentOperationDomInfo = [arr2, ...this.currentOperationDomInfo]
+                },
+                //双击变为input
+                chnageInput(index, id) {
+                    this.changeInput[index].forEach(item => {
+                        item.change = false
+                    })
+                    this.currentOperationDomInfo[index].modify = true;
+                },
+                // 单击变为span
+                eventListener(index) {
+                    if (this.currentOperationDomInfo[0].addInfo && index != 0) {
+                        failedCallback('请将要添加的数据填好再进行其余操作')
+                        return
+                    }
+                    if (this.currentOperationDomInfo[index].modify == false) {
+                        this.chooseInput(index)
+                        return
+                    }
+                },
+                // 模板页面单击事件
+                clickEventListen(index) {
+                    if (this.stopMP == 'end') {
+                        return
+                    }
+                    if (this.fengzhunagdianji(index)) {
+                        return
+                    }
+                    this.TLchangeInput.forEach(item => {
+                        item.forEach(item1 => {
+                            item1.change = false
+                        })
+                    })
+                    this.TLbeforeChange[index].isChecked = !this.TLbeforeChange[index].isChecked
+                    if (this.TLbeforeChange[index].isChecked) {
+                        let id = this.TLbeforeChange[index].id
+                        let ifExist = this.TLcheckedListIdInfo.indexOf(id);
+                        if (ifExist == -1) {
+                            this.TLcheckedListIdInfo.push(id)
+                        }
+                    } else {
+                        let id = this.TLbeforeChange[index].id
+                        let ifExist = this.TLcheckedListIdInfo.indexOf(id);
+                        if (ifExist != -1) {
+                            this.TLcheckedListIdInfo.splice(ifExist, 1)
+                        }
+                    }
+                },
+                // 模板页面双击事件
+                changeSpanToInput(index) {
+                    this.stopMP = 'end'
+                    try {
+                        this.TLbeforeChange.forEach(item => {
+                            if (item.addInfo || item.modify) {
+                                throw new Error('停止forEach')
+                                return
+                            }
+                        })
+                    } catch (error) {
+                        if (error.message === '停止forEach') throw error
+                    }
+                    this.TLchangeInput[index].forEach(item => {
+                        item.change = true
+                    })
+                    if (this.TLchangeInput[index][2].columnType == "datetime") {
+                        setTimeout(() => {
+                            $("[valueindex=valueIndex" + index + "]").datetimepicker({
+                                format: 'yyyy-mm-dd hh:ii:ss',
+                                autoclose: true,
+                                language: 'zh-CN',
+                                minuteStep: 5
+                            })
+                        }, 100)
+                    } else if (this.TLchangeInput[index][2].columnType == "tinyint") {
+                        this.TLdefaultChange = 'tinyint'
+                        let option = ``
+                        if (this.TLchangeInput[index][12].defaultValue == 0) {
+                            option += `<option value='1' selected>是</option><option value='0'>否</option>`
+                        } else if (this.TLchangeInput[index][12].defaultValue == 1) {
+                            option += `<option value='0' selected>否</option><option value='1'>是</option>`
+                        }
+                        $(`.selectDictionary${index}`).append(option)
+                    } else if (this.TLchangeInput[index][2].columnType == "select") {
+                        this.TLdefaultChange = 'select'
+                        axios.get(`/dictionary/getDictionaryByType?type=${this.TLOldOperationDomInfo[index][5].dictionaryType.split('-')[0]}`).then(res => {
+                            if (res.data.code != 200) {
+                                failedCallback(res.data.message)
+                                return
+                            }
+                            let option = ``
+                            for (let i = 0; i < res.data.data.length; i++) {
+                                if (res.data.data[i].id == this.TLOldOperationDomInfo[index][12].defaultValue) {
+                                    option += `<option value='${res.data.data[i].value}-${res.data.data[i].id}' selected>${res.data.data[i].value}</option>`
+                                } else {
+                                    option += `<option value='${res.data.data[i].value}-${res.data.data[i].id}'>${res.data.data[i].value}</option>`
+                                }
+                            }
+                            $(`.selectDictionary${index}`).append(option)
+                        })
+                    }
+                    this.TLbeforeChange[index].modify = true
+                },
+                // 模板页面点击修改按钮
+                templateClick(index) {
+                    if (this.fengzhunagdianji(index)) {
+                        return
+                    }
+                    this.changeSpanToInput(index)
+                },
+                // 封装一个处理函数
+                fengzhunagdianji(index) {
+                    let flag = false
+                    // 找出来正在操作的这一行和点击的这一行,如果两行不相等那么停止向下执行
+                    for (let i = 0; i < this.TLbeforeChange.length; i++) {
+                        if (this.TLbeforeChange[i].modify || this.TLbeforeChange[i].addInfo) {
+                            if (i != index) {
+                                flag = true
+                                break
+                            }
+                        }
+                    }
+                    if (flag) {
+                        failedCallback('请完成操作后再点击其他操作')
+                        return true
+                    }
+                    return false
+                },
+                // 模板页面点击取消修改按钮
+                templateCancalModify(index) {
+                    this.TLbeforeChange[index].modify = false
+                    this.TLchangeInput[index].forEach(item => {
+                        item.change = false
+                    })
+                },
+                // 模板页面点击添加按钮
+                templateAdd() {
+                    this.stopMP = 'end';
+                    let readyToReplace = []
+                    let arr = [
+                        { showColumnName: "", ifDisable: false, id: null, change: true },
+                        { columnName: "", ifDisable: false, id: null, change: true },
+                        { columnType: "", ifDisable: false, id: null, change: true },
+                        { columnTypeLength: "", ifDisable: false, id: null, change: true },
+                        { regularColumn: "", ifDisable: false, id: null, change: true },
+                        { dictionaryType: "", ifDisable: false, id: null, change: true },
+                        { showForm: "true", ifDisable: false, id: null, change: true },
+                        { showWatch: "true", ifDisable: false, id: null, change: true },
+                        { requiredFields: "true", ifDisable: false, id: null, change: true },
+                        { useForQuery: "true", ifDisable: false, id: null, change: true },
+                        { rfidUse: "true", ifDisable: false, id: null, change: true },
+                        { principalColumn: "true", ifDisable: false, id: null, change: true },
+                        { defaultValue: "", ifDisable: false, id: null, change: true }
+                    ]
+                    for (let i = 0; i < this.TLchangeInput.length + 1; i++) {
+                        if (i == 0) {
+                            readyToReplace.push(arr);
+                            continue
+                        }
+                        readyToReplace.push(this.TLchangeInput[i - 1])
+                    }
+                    this.TLchangeInput = readyToReplace
+                    let readyToReplaceOne = []
+                    let obj1 = {
+                        addInfo: true,
+                        id: null,
+                        isChecked: false,
+                        modify: false
+                    };
+                    for (let i = 0; i < this.TLbeforeChange.length + 1; i++) {
+                        if (i == 0) {
+                            readyToReplaceOne.push(obj1);
+                            continue
+                        }
+                        readyToReplaceOne.push(this.TLbeforeChange[i - 1])
+                    }
+                    this.TLbeforeChange = readyToReplaceOne
+                },
+                // 取消添加事件
+                templateCancalAdd() {
+                    this.stopMP = 'start'
+                    this.TLbeforeChange.splice(0, 1)
+                    this.TLchangeInput.splice(0, 1)
+                },
+                // 确认修改按钮发送修改请求
+                templateConfirmModify(index) {
+                    let arr = []
+                    let arr1 = []
+                    let arr3 = []
+                    arr.push({ name: "showColumnName", text: this.TLOldOperationDomInfo[index][0].showColumnName })
+                    arr.push({ name: "columnName", text: this.TLOldOperationDomInfo[index][1].columnName })
+                    arr.push({ name: "columnType", text: this.TLOldOperationDomInfo[index][2].columnType })
+                    arr.push({ name: "columnTypeLength", text: this.TLOldOperationDomInfo[index][3].columnTypeLength })
+                    arr.push({ name: "regularColumn", text: this.TLOldOperationDomInfo[index][4].regularColumn })
+                    arr.push({ name: "dictionaryType", text: this.TLOldOperationDomInfo[index][5].dictionaryType })
+                    arr.push({ name: "showForm", text: this.TLOldOperationDomInfo[index][6].showForm })
+                    arr.push({ name: "showWatch", text: this.TLOldOperationDomInfo[index][7].showWatch })
+                    arr.push({ name: "requiredFields", text: this.TLOldOperationDomInfo[index][8].requiredFields })
+                    arr.push({ name: "useForQuery", text: this.TLOldOperationDomInfo[index][9].useForQuery })
+                    arr.push({ name: "rfidUse", text: this.TLOldOperationDomInfo[index][10].rfidUse })
+                    arr.push({ name: "principalColumn", text: this.TLOldOperationDomInfo[index][11].principalColumn })
+                    arr.push({ name: "defaultValue", text: this.TLOldOperationDomInfo[index][12].defaultValue })
+                    arr1.push({ name: "showColumnName", text: this.TLchangeInput[index][0].showColumnName })
+                    arr1.push({ name: "columnName", text: this.TLchangeInput[index][1].columnName })
+                    arr1.push({ name: "columnType", text: this.TLchangeInput[index][2].columnType })
+                    arr1.push({ name: "columnTypeLength", text: this.TLchangeInput[index][3].columnTypeLength })
+                    arr1.push({ name: "regularColumn", text: this.TLchangeInput[index][4].regularColumn })
+                    arr1.push({ name: "dictionaryType", text: this.TLchangeInput[index][5].dictionaryType })
+                    arr1.push({ name: "showForm", text: this.TLchangeInput[index][6].showForm })
+                    arr1.push({ name: "showWatch", text: this.TLchangeInput[index][7].showWatch })
+                    arr1.push({ name: "requiredFields", text: this.TLchangeInput[index][8].requiredFields })
+                    arr1.push({ name: "useForQuery", text: this.TLchangeInput[index][9].useForQuery })
+                    arr1.push({ name: "rfidUse", text: this.TLchangeInput[index][10].rfidUse })
+                    arr1.push({ name: "principalColumn", text: this.TLchangeInput[index][11].principalColumn })
+                    arr1.push({ name: "defaultValue", text: this.TLchangeInput[index][12].defaultValue })
+                    let arr2 = []
+                    if (this.TLOldOperationDomInfo[index][2].columnType == "double") {
+                        let length = []
+                        let length1 = []
+                        length.push(arr[3].text)
+                        length.push(arr[4].text)
+                        length1.push(arr1[3].text)
+                        length1.push(arr1[4].text)
+                        arr.splice(3, 2)
+                        arr1.splice(3, 2)
+                        arr.splice(3, 0, { name: "length", text: length })
+                        arr1.splice(3, 0, { name: "length", text: length1 })
+                    } else if (this.TLOldOperationDomInfo[index][2].columnType == "int" ||
+                        this.TLOldOperationDomInfo[index][2].columnType == "bigint" ||
+                        this.TLOldOperationDomInfo[index][2].columnType == "varchar") {
+                        let length = []
+                        let length1 = []
+                        length.push(arr[3].text)
+                        length1.push(arr1[3].text)
+                        arr.splice(3, 1)
+                        arr1.splice(3, 1)
+                        arr.splice(3, 0, { name: "length", text: length })
+                        arr1.splice(3, 0, { name: "length", text: length1 })
+                    }
+                    let ifExistDifferent = false
+                    for (let i = 0; i < arr.length; i++) {
+                        let obj = {}
+                        if (arr[i].name == "length") {
+                            obj[arr1[i].name] = arr1[i].text
+                            arr2.push(obj)
+                            continue
+                        }
+                        if (arr[i].text != arr1[i].text) {
+                            obj[arr1[i].name] = arr1[i].text
+                            arr2.push(obj)
+                        } else {
+                            obj[arr[i].name] = arr[i].text
+                            arr3.push(obj)
+                        }
+                    }
+                    if (arr2.length == 0) {
+                        if (arr3.length == 0) {
+                            failedCallback('未进行修改')
+                            return
+                        }
+                    }
+                    arr2 = [...arr3, ...arr2]
+                    if (arr[2].text == 'datetime') {
+                        arr2[12].defaultValue = $(`[valueindex='valueIndex1']`).val()
+                    } else if (arr[2].text == 'select') {
+                        arr2[12].defaultValue = arr2[12].defaultValue.split('-')[1]
+                    }
+                    let finalObj = {}
+                    arr2.forEach(item => {
+                        Object.assign(finalObj, item)
+                    })
+                    finalObj.operationType = 2
+                    finalObj.id = this.TLchangeInput[index][0].id
+                    axios.post('/archiveColumnTemplate/update', [finalObj]).then(res => {
+                        if (res.data.code != 200) {
+                            failedCallback(res.data.message);
+                            return
+                        }
+                        successfulCallback(res.data.message)
+                        axios.get(`/archiveColumnTemplate/page/${this.everySituationCurrentPageInfo[1]}/${this.everySituationCurrentPagesize[1]}`).then(res => {
+                            if (res.data.code != 200) {
+                                failedCallback(res.data.message)
+                                return
+                            }
+                            successfulCallback(res.data.message)
+                            this.limit.situation = 'two' //切换状态
+                            this.pageChoose = false;  //保持页面在模板内页
+                            this.drawingPageNation(res.data.currentPageNumber, res.data.pageCount) //重新渲染分页器
+                            this.TLchangeInput = []  //置空数组,放置重复渲染
+                            this.TLOldOperationDomInfo = []
+                            this.TLbeforeChange = []
+                            // 阻止相互引用进行数组或对象的深拷贝
+                            this.copyStartTLListInfo(res, this.TLchangeInput)
+                            this.copyStartTLListInfo(res, this.TLOldOperationDomInfo)
+                            this.TLchangeInput.forEach(item => {
+                                let obj = {
+                                    modify: false,
+                                    addInfo: false,
+                                    isChecked: false,
+                                    id: item[0].id
+                                }
+                                if (item[2].columnType == 'int' ||
+                                    item[2].columnType == 'bigint' ||
+                                    item[2].columnType == 'varchar' ||
+                                    item[2].columnType == 'double') {
+                                    this.TLdefaultChange.push('default')
+                                } else if (item[2].columnType == 'tinyint') {
+                                    if (item[12].defaultValue == '0') {
+                                        item[12].defaultValue = '否'
+                                    } else {
+                                        item[12].defaultValue = '是'
+                                    }
+                                    this.TLdefaultChange.push('select')
+                                } else if (item[2].columnType == 'datetime') {
+                                    this.TLdefaultChange.push('datetime')
+                                } else if (item[2].columnType == 'select') {
+                                    axios.get(`/dictionary/getDictionaryByType?type=${item[5].dictionaryType}`).then(res => {
+                                        if (res.data.code != 200) {
+                                            failedCallback(res.data.message)
+                                            return
+                                        }
+                                        res.data.data.forEach(item1 => {
+                                            if (item1.id == item[12].defaultValue) {
+                                                item[12].defaultValue = item1.value
+                                            }
+                                        })
+                                    })
+                                } else {
+                                    this.TLdefaultChange.push('default')
+                                    item[12].ifDisable = true
+                                }
+                                if (this.TLcheckedListIdInfo.indexOf(item[0].id) != -1) {
+                                    obj.isChecked = true
+                                }
+                                this.TLbeforeChange.push(obj)
+                            })
+                        })
+                    })
+                },
+                // 判断是否存在小数点和默认值显示为select或input的切换
+                selectDecimalSeparator(event, index, columnType) {
+                    stopMP = 'end'
+                    if (columnType == "int" || columnType == "bigint" || columnType == "varchar") {
+                        this.TLdefaultChange = "default";
+                        this.changeInputTL(index)  //解开这个disable,然后下面再添加disable
+                        this.TLchangeInput[index][4].ifDisable = true
+                        this.TLchangeInput[index][5].ifDisable = true
+                        return
+                    }
+                    if (columnType == "text") {
+                        this.TLdefaultChange = "default"
+                        this.changeInputTL(index)
+                        this.TLchangeInput[index][3].ifDisable = true
+                        this.TLchangeInput[index][4].ifDisable = true
+                        this.TLchangeInput[index][5].ifDisable = true
+                        this.TLchangeInput[index][12].ifDisable = true
+                        return
+                    }
+                    if (columnType == "double") {
+                        this.TLdefaultChange = "default"
+                        this.changeInputTL(index)
+                        this.TLchangeInput[index][5].ifDisable = true
+                        return
+                    }
+                    if (columnType == "select") {
+                        this.TLdefaultChange = "select"
+                        this.changeInputTL(index)
+                        this.TLchangeInput[index][3].ifDisable = true
+                        this.TLchangeInput[index][4].ifDisable = true
+                        return
+                    }
+                    if (columnType == 'tinyint') {
+                        this.TLdefaultChange = "tinyint"
+                        this.changeInputTL(index)
+                        this.TLchangeInput[index][3].ifDisable = true
+                        this.TLchangeInput[index][4].ifDisable = true
+                        this.TLchangeInput[index][5].ifDisable = true
+                        return
+                    }
+                    if (columnType == 'datetime') {
+                        this.TLdefaultChange = "datetime"
+                        this.changeInputTL(index)
+                        this.TLchangeInput[index][3].ifDisable = true
+                        this.TLchangeInput[index][4].ifDisable = true
+                        this.TLchangeInput[index][5].ifDisable = true
+                        setTimeout(() => {
+                            $("[valueindex=valueIndex" + index + "]").datetimepicker({
+                                format: 'yyyy-mm-dd hh:ii:ss',
+                                autoclose: true,
+                                language: 'zh-CN',
+                                minuteStep: 5
+                            });
+                        }, 100)
+                        return
+                    }
+                },
+                // 上面这个函数的复用函数
+                changeInputTL(index) {
+                    this.TLchangeInput[index][3].ifDisable = false
+                    this.TLchangeInput[index][3].columnTypeLength = ''
+                    this.TLchangeInput[index][4].ifDisable = false
+                    this.TLchangeInput[index][4].regularColumn = ''
+                    this.TLchangeInput[index][5].ifDisable = false
+                    this.TLchangeInput[index][5].dictionaryType = ''
+                    this.TLchangeInput[index][12].ifDisable = false
+                    this.TLchangeInput[index][12].defaultValue = ''
+                },
+                // 模板页面点击确认添加
+                templateConfirmAdd(index) {
+                    let arr = []
+                    arr.push({ name: "showColumnName", text: this.TLchangeInput[index][0].showColumnName })
+                    arr.push({ name: "columnName", text: this.TLchangeInput[index][1].columnName })
+                    arr.push({ name: "columnType", text: this.TLchangeInput[index][2].columnType })
+                    arr.push({ name: "columnTypeLength", text: this.TLchangeInput[index][3].columnTypeLength })
+                    arr.push({ name: "regularColumn", text: this.TLchangeInput[index][4].regularColumn })
+                    arr.push({ name: "dictionaryType", text: this.TLchangeInput[index][5].dictionaryType })
+                    arr.push({ name: "showForm", text: this.TLchangeInput[index][6].showForm })
+                    arr.push({ name: "showWatch", text: this.TLchangeInput[index][7].showWatch })
+                    arr.push({ name: "requiredFields", text: this.TLchangeInput[index][8].requiredFields })
+                    arr.push({ name: "useForQuery", text: this.TLchangeInput[index][9].useForQuery })
+                    arr.push({ name: "rfidUse", text: this.TLchangeInput[index][10].rfidUse })
+                    arr.push({ name: "principalColumn", text: this.TLchangeInput[index][11].principalColumn })
+                    arr.push({ name: "defaultValue", text: this.TLchangeInput[index][12].defaultValue })
+                    if (this.TLchangeInput[index][2].columnType == 'int' ||
+                        this.TLchangeInput[index][2].columnType == 'bigint' ||
+                        this.TLchangeInput[index][2].columnType == 'varchar') {
+                        arr.splice(4, 1);
+                        let obj = {
+                            name: 'length',
+                            text: [arr[3].text]
+                        }
+                        arr.splice(3, 1);
+                        arr.splice(3, 0, obj)
+                    } else if (this.TLchangeInput[index][2].columnType == 'double') {
+                        let obj = {
+                            name: 'length',
+                            text: [arr[3].text, arr[4].text]
+                        }
+                        arr.splice(3, 1);
+                        arr.splice(4, 1);
+                        arr.splice(3, 0, obj)
+                    }
+                    let newObj = {}
+                    arr.forEach(item => {
+                        newObj[item.name] = item.text
+                    })
+                    newObj.operationType = 1
+                    axios.post('/archiveColumnTemplate/save', [newObj]).then(res => {
+                        if (res.data.code != 200) {
+                            failedCallback(res.data.message);
+                            return
+                        }
+                        successfulCallback(res.data.message);
+                        axios.get(`/archiveColumnTemplate/page/${this.everySituationCurrentPageInfo[1]}/${this.everySituationCurrentPagesize[1]}`).then(res => {
+                            if (res.data.code != 200) {
+                                failedCallback(res.data.message)
+                                return
+                            }
+                            this.stopMP = 'start'
+                            // 添加index
+                            this.addIndex = 'addIndex'
+                            // 拿到这个默认值
+                            this.valueIndex = 'valueIndex'
+                            this.selectDictionary = 'selectDictionary'
+                            this.pageNationList = []
+                            this.TLchangeInput = []
+                            // 内页   核对以及控制点击修改和添加时候的按钮变动方式
+                            this.TLOldOperationDomInfo = []
+                            // 内页   核对修改的值和储存返回回来数据的id
+                            this.TLbeforeChange = []
+                            // 内页   绑定搜索input
+                            this.TLsearchInput = ""
+                            // 内页   控制显示模板组页面还是具体模板列表页面
+                            this.TLpageChoose = true
+                            // 内页   储存具体模板页面的列表信息
+                            this.TLtemplateListInfo = []
+                            // 内页   选中input之后推送元素进来,支持分页选择功能,在点击分页的时候需要向这个localstoreage中存储,执行完毕之后再拿出来赋值回来
+                            this.TLcheckedListIdInfo = []
+                            // 内页   控制全选全不选input
+                            this.TLallChecked = false
+                            // 内页   控制select点击之后改变default值,'default','datetime','select'
+                            this.TLdefaultChange = []
+                            // 控制冒泡,start为可以冒泡,end为不可以
+                            this.stopMP = 'start'
+                            this.limit = {
+                                start: '',
+                                end: '',
+                                currentPage: '',
+                                situation: 'one', //one走已进入页面的逻辑,two走进入模板页面逻辑,three走选中模板组查看其中模板逻辑
+                                pageLimit: ''
+                            },
+                                successfulCallback(res.data.message)
+                            this.limit.situation = 'two' //切换状态
+                            this.pageChoose = false;  //保持页面在模板内页
+                            this.drawingPageNation(res.data.currentPageNumber, res.data.pageCount) //重新渲染分页器
+                            this.TLchangeInput = []  //置空数组,放置重复渲染
+                            this.TLOldOperationDomInfo = []
+                            this.TLbeforeChange = []
+                            // 阻止相互引用进行数组或对象的深拷贝
+                            this.copyStartTLListInfo(res, this.TLchangeInput)
+                            this.copyStartTLListInfo(res, this.TLOldOperationDomInfo)
+                            this.TLchangeInput.forEach(item => {
+                                let obj = {
+                                    modify: false,
+                                    addInfo: false,
+                                    isChecked: false,
+                                    id: item[0].id
+                                }
+                                if (item[2].columnType == 'int' ||
+                                    item[2].columnType == 'bigint' ||
+                                    item[2].columnType == 'varchar' ||
+                                    item[2].columnType == 'double') {
+                                    this.TLdefaultChange.push('default')
+                                } else if (item[2].columnType == 'tinyint') {
+                                    if (item[12].defaultValue == '0') {
+                                        item[12].defaultValue = '否'
+                                    } else {
+                                        item[12].defaultValue = '是'
+                                    }
+                                    this.TLdefaultChange.push('select')
+                                } else if (item[2].columnType == 'datetime') {
+                                    this.TLdefaultChange.push('datetime')
+                                } else if (item[2].columnType == 'select') {
+                                    axios.get(`/dictionary/getDictionaryByType?type=${item[5].dictionaryType}`).then(res => {
+                                        if (res.data.code != 200) {
+                                            failedCallback(res.data.message)
+                                            return
+                                        }
+                                        res.data.data.forEach(item1 => {
+                                            if (item1.id == item[12].defaultValue) {
+                                                item[12].defaultValue = item1.value
+                                            }
+                                        })
+                                    })
+                                } else {
+                                    this.TLdefaultChange.push('default')
+                                    item[12].ifDisable = true
+                                }
+                                if (this.TLcheckedListIdInfo.indexOf(item[0].id) != -1) {
+                                    obj.isChecked = true
+                                }
+                                this.TLbeforeChange.push(obj)
+                            })
+                        })
+                    })
+                },
+                templateDelete(index) {
+                    if (confirm('确认是否删除')) {
+                        axios.get(`/archiveColumnTemplate/delete/${this.TLchangeInput[index][0].id}`).then(res => {
+                            if (res.data.code != 200) {
+                                failedCallback(res.data.mesasge)
+                                return
+                            }
+                            successfulCallback(res.data.mesage)
+                            location.reload()
+                        })
+                    }
+                },
+                // 渲染分页器逻辑
+                drawingPageNation(currentPage, pageLimit) {
+                    this.limit.pageLimit = pageLimit
+                    if ((currentPage - 2 == 1 && currentPage + 2 == pageLimit) ||
+                        (currentPage - 2 < 1 && currentPage + 2 == pageLimit) ||
+                        (currentPage - 2 < 1 && currentPage + 2 > pageLimit)) {
+                        this.limit.start = 1
+                        this.limit.end = pageLimit
+                        this.limit.currentPage = currentPage
+                    }
+                    if (currentPage - 2 > 1 && currentPage + 2 == pageLimit) {
+                        this.limit.start = currentPage - 2
+                        this.limit.end = pageLimit
+                        this.limit.currentPage = currentPage
+                    }
+                    if (currentPage - 2 == 1 && currentPage + 2 > pageLimit) {
+                        this.limit.start = 1
+                        this.limit.end = pageLimit
+                        this.limit.currentPage = currentPage
+                    }
+                    if (currentPage - 2 == 1 && currentPage + 2 < pageLimit) {
+                        this.limit.start = 1
+                        this.limit.end = currentPage + 2
+                        this.limit.currentPage = currentPage
+                    }
+                    if (currentPage - 2 > 1 && currentPage + 2 < pageLimit) {
+                        this.limit.start = currentPage - 2
+                        this.limit.end = pageLimit
+                        this.limit.currentPage = currentPage
+                    }
+                },
+                // 点击左移
+                moveToLeft() {
+                    if (this.limit.currentPage == 1) {
+                        return
+                    }
+                    if (this.limit.situation == 'one') {
+                        this.everySituationCurrentPageInfo[0] = --this.everySituationCurrentPageInfo[0]
+                        this.limit.currentPage = this.everySituationCurrentPageInfo[0]
+                        axios.post(`/templateGroup/page/${this.everySituationCurrentPageInfo[0]}/${this.everySituationCurrentPagesize[0]}`).then(res => {
+                            if (res.data.code != 200) {
+                                failedCallback(res.data.message);
+                                return
+                            }
+                            successfulCallback(res.data.message);
+                            this.situation = 'one'
+                            this.drawingTemplateList(res);
+                            this.drawingPageNation(res.data.currentPageNumber, res.data.pageCount)
+                        })
+                    } else if (this.limit.situation == 'two') {
+                        this.everySituationCurrentPageInfo[1] = --this.everySituationCurrentPageInfo[1]
+                        this.limit.currentPage = this.everySituationCurrentPageInfo[1]
+                        this.tempalteListOperate()
+                    }
+                },
+                // 店家右移
+                moveToRight() {
+                    if (this.limit.currentPage == this.limit.pageLimit) {
+                        return
+                    }
+                    if (this.limit.situation == 'one') {
+                        this.everySituationCurrentPageInfo[0] = ++this.everySituationCurrentPageInfo[0]
+                        this.limit.currentPage = this.everySituationCurrentPageInfo[0]
+                        axios.post(`/templateGroup/page/${this.everySituationCurrentPageInfo[0]}/${this.everySituationCurrentPagesize[0]}`).then(res => {
+                            if (res.data.code != 200) {
+                                failedCallback(res.data.message);
+                                return
+                            }
+                            successfulCallback(res.data.message);
+                            this.situation = 'one'
+                            this.drawingTemplateList(res);
+                            this.drawingPageNation(res.data.currentPageNumber, res.data.pageCount)
+                        })
+                    } else if (this.limit.situation == 'two') {
+                        this.everySituationCurrentPageInfo[1] = ++this.everySituationCurrentPageInfo[1]
+                        this.limit.currentPage = this.everySituationCurrentPageInfo[1]
+                        this.tempalteListOperate()
+                    }
+                },
+                // 点击应用按钮执行逻辑
+                application() {
+                    if (this.checkedListIdInfo.length != 1) {
+                        failedCallback('请返回选择单独的模板组进行操作')
+                        return
+                    }
+                    axios.post(`/templateGroupRelation/binding/${this.checkedListIdInfo[0]}`, this.TLcheckedListIdInfo).then(res => {
+                        if (res.data.code != 200) {
+                            failedCallback(res.data.message)
+                            return
+                        }
+                        successfulCallback(res.data.message)
+                        location.reload();
+                    })
+                },
+                TLchekedAll() {
+                    this.TLallChecked = !this.TLallChecked
+                    if (this.TLallChecked) {
+                        this.TLbeforeChange.forEach(item => {
+                            item.isChecked = true
+                            if (this.TLcheckedListIdInfo.indexOf(item.id) == -1) {
+                                this.TLcheckedListIdInfo.push(item.id)
+                            }
+                        })
+                    } else {
+                        this.TLbeforeChange.forEach(item => {
+                            item.isChecked = false
+                            let index = this.TLcheckedListIdInfo.indexOf(item.id)
+                            if (index != -1) {
+                                this.TLcheckedListIdInfo.splice(index, 1)
+                            }
+                        })
+                    }
+                },
+                checkTemplateGroupInfo(index) {
+                    let groupId = this.beforeChange[index][2]
+                    axios(`/archiveColumnTemplate/getTemplatesByGroupId/${groupId}`).then(res => {
+                        if (res.data.code != 200) {
+                            failedCallback(res.data.message)
+                            return
+                        }
+                        successfulCallback(res.data.message)
+                        this.addButtonDisplayNone = false
+                        this.pageChoose = false;  //保持页面在模板内页
+                        this.drawingPageNation(res.data.currentPageNumber, res.data.pageCount) //重新渲染分页器
+                        this.TLchangeInput = []  //置空数组,放置重复渲染
+                        this.TLOldOperationDomInfo = []
+                        this.TLbeforeChange = []
+                        // 阻止相互应用进行数组或对象的升拷贝
+                        this.copyStartTLListInfo(res, this.TLchangeInput)
+                        this.copyStartTLListInfo(res, this.TLOldOperationDomInfo)
+                        this.TLchangeInput.forEach(item => {
+                            let obj = {
+                                modify: false,
+                                addInfo: false,
+                                isChecked: false,
+                                id: item[0].id
+                            }
+                            if (item[2].columnType == 'int' ||
+                                item[2].columnType == 'bigint' ||
+                                item[2].columnType == 'varchar' ||
+                                item[2].columnType == 'double') {
+                                this.TLdefaultChange.push('default')
+                            } else if (item[2].columnType == 'tinyint' ||
+                                item[2].columnType == 'select') {
+                                this.TLdefaultChange.push('select')
+                            } else if (item[2].columnType == 'datetime') {
+                                this.TLdefaultChange.push('datetime')
+                            } else {
+                                this.TLdefaultChange.push('default')
+                                item[12].ifDisable = true
+                            }
+                            if (this.TLcheckedListIdInfo.indexOf(item[0].id) != -1) {
+                                obj.isChecked = true
+                            }
+                            this.TLbeforeChange.push(obj)
+                        })
+                    })
+                },
+                changeDictionary(a, index) {
+                    axios.get(`/dictionary/fuzzySearchLimit5?keyword=${this.TLchangeInput[index][5].dictionaryType}`).then((res) => {
+                        if (res.data.code != 200) {
+                            failedCallback(res.message)
+                            return
+                        }
+                        $('#datalistOptions').empty()
+                        let options = ``
+                        res.data.data.forEach(item => {
+                            options += `<option value="${item.type}-${item.id}"></option>`
+                        })
+                        $('#datalistOptions').append(options)
+                    })
+                },
+                dictionaryOnChange(index) {
+                    setTimeout(() => {
+                        let value = this.TLchangeInput[index][5].dictionaryType.split('-')[0]
+                        axios(`/dictionary/getDictionaryByType?type=${value}`).then(res => {
+                            if (res.data.code != 200) {
+                                failedCallback(res.message)
+                                return
+                            }
+                            $(`.selectDictionary${index}`).empty()
+                            let options = ``
+                            res.data.data.forEach(item => {
+                                options += `<option value="${item.id}">${item.value}</option>`
+                            })
+                            $(`.selectDictionary${index}`).append(options)
+                        })
+                    }, 50)
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

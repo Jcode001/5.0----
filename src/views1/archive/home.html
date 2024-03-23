@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>档案门类</title>
+    <link rel="stylesheet" th:href="@{/bootstrap-5.1.3-dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/tree.css}">
+    <link rel="stylesheet" th:href="@{/css/archve/home.css}">
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+    <script th:src="@{/js/treescroll.min.js}"></script>
+    <script th:src="@{/js/archve/home.js}"></script>
+    <script th:src="@{/js/common/common.js}"></script>
+    <script th:src="@{/js/index.js}"></script>
+    <link rel="stylesheet" th:href="@{/icon/iconfont.css}">
+    
+    <script th:src="@{/js/echarts.min.js}"></script>
+    <script th:src="@{/js/menuTotal.js}"></script>
+    <!-- <link rel="stylesheet" href="/static/bootstrap-5.1.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/tree.css">
+    <link rel="stylesheet" href="/static/css/archve/home.css">
+    <script src="/static/js/jquery-1.11.3.min.js"></script>
+    <script src="/static/js/archve/home.js"></script>
+    <script src="/static/js/index.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+    <link rel="stylesheet" href="/static/icon/iconfont.css"> -->
+</head>
+
+<script th:inline="javascript">
+    var basePath = [[${ serverAddress }]]
+    localStorage.setItem('portName', basePath)
+</script>
+
+<body class="wrapppd">
+    <div class="container-fluid">
+        <!-- 下面是基本结构 -->
+        <div class="row" style="height:8vh">
+            <headere class="col-12 topNavigation">
+
+            </headere>
+        </div>
+        <div class="row contentFather" style="height:92vh">
+            <div class="contentLeft col-2" style="height:100%;width: 15%;">
+                <div style="height:7vh" class="topNavigationBorder" onclick="closeMenu()">
+                    <span class="iconfont icon-zhankaicaidan1 globalMenu" id="Menu">菜单</span>
+                </div>
+                <!-- 这里放置左侧导航栏 -->
+            </div>
+            <div class="col-10 contentRight" style="height:100%;width:85%;">
+                <div>
+                    <div id="functionButton" style="height:100%">
+                        <div style="height:100%;display: none;">
+                            <div style="display: none;">
+                                <div class="contentButton">
+                                    <button type="button" class="btn btn-success" id="data-preview-button">数据预览</button>
+                                    <button type="button" class="btn btn-primary"
+                                        id="full-text-search-button">全文搜索</button>
+                                </div>
+                            </div>
+                            <div style="height:70vh;display: none;">
+                                <div class="contentTow">
+                                    <div class="boxs">
+                                        <div class="tabs-box" id="data-preview-div">1</div>
+                                        <div class="tabs-box" id="full-text-search-div">
+                                            <div>
+                                                <h3>智慧档案管理总平台</h3>
+                                                <div class="contentcenter">
+                                                    <div class="input-group mb-3" style="margin-left:2vw">
+                                                        <input type="text" class="form-control" placeholder="请输入关键字"
+                                                            id="keyword">
+                                                        <button class="btn btn-success" type="button"
+                                                            id="search">搜索</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="overflow-y:scroll; max-height: 31.25rem;">
+                                                <table class="table table-striped" style="width:90%; margin-left: 5%;">
+                                                    <tbody id="data-tbody">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="height:100%">
+                            <div style="height:7vh;margin-bottom:1vh;">
+                                <div class="row">
+                                    <div class="currentPosition col-12" style="height:100%;">
+                                        <span style="margin-left:2vw"> <a href="/toArchiveHome">智慧档案管理总平台</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style>
+                                <div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="input-group mb-3" style="margin-left:2vw">
+                                                        <input type="text" class="form-control searchInput"
+                                                            aria-label="Recipient's username"
+                                                            aria-describedby="button-addon2"
+                                                            style="border-right: 0rem;">
+                                                        <button class="btn btn-outline-secondary iconfont icon-sousuo"
+                                                            type="button"
+                                                            style="border-left: 0rem;
+                                                        border-color: rgb(206, 212, 218);
+                                                        background-color: rgb(255, 255, 255);color: #367fd4;border-radius: 0rem .3125rem .3125rem 0rem;"
+                                                            id="button-addon2" onclick="shearchInfo()">搜索</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6"></div>
+                                    </div>
+                                </div>
+                                <div class="dataDisplay">
+                                    <div class="row" style="height:20vh;width:100%;margin-left: .0625rem;">
+
+                                        <div class="col-3" style="position:relative">
+                                            <div
+                                                style="position: absolute;width: 100%;height:100%;left: .625rem;top: 2.5rem;">
+                                                <div class="iconfont icon-wenjianjia_kai iconAllClass"></div>
+                                                <div
+                                                    style="font-size: 1.25rem;display: inline-block;margin-left: .625rem;">
+                                                    <span style="font-size: 1.875rem;" id="grossamount">28</span>
+                                                    <br><span style="font-size: 1.25rem;">总量</span>
+                                                </div>
+                                                <div style="width:5.625rem;height: 5.625rem;display: inline-block;position: absolute;right:2.5rem"
+                                                    id="circleImg0"></div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-3" style="position:relative">
+                                            <div
+                                                style="position: absolute;width: 100%;height:100%;left: .625rem;top: 2.5rem;">
+                                                <div class="iconfont icon-wenjianjia_kai iconAllClass"></div>
+                                                <div
+                                                    style="font-size: 1.25rem;display: inline-block;margin-left: .625rem;">
+                                                    <span style="font-size: 1.875rem;" id="total">0</span> <br><span
+                                                        style="font-size: 1.25rem;">在库</span>
+                                                </div>
+                                                <div style="width:5.625rem;height: 5.625rem;display: inline-block;position: absolute;right:2.5rem"
+                                                    id="circleImg"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3" style="position:relative">
+                                            <div
+                                                style="position: absolute;width: 100%;height:100%;left: .625rem;top: 2.5rem;">
+                                                <div class="iconfont icon-wenjianjia_kai iconAllClass"></div>
+                                                <div
+                                                    style="font-size: 1.25rem;display: inline-block;margin-left: .625rem;">
+                                                    <span style="font-size: 1.875rem;" id="borrowing">0</span> <br><span
+                                                        style="font-size: 1.25rem;">出库</span>
+                                                </div>
+                                                <div style="width:5.625rem;height: 5.625rem;display: inline-block;position: absolute;right:2.5rem"
+                                                    id="circleImg1"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3" style="position:relative">
+                                            <div
+                                                style="position: absolute;width: 100%;height:100%;left: .625rem;top: 2.5rem;">
+                                                <div class="iconfont icon-wenjianjia_kai iconAllClass"></div>
+                                                <div
+                                                    style="font-size: 1.25rem;display: inline-block;margin-left: .625rem;">
+                                                    <span style="font-size: 1.875rem;" id="joggling">0</span> <br><span
+                                                        style="font-size: 1.25rem;">错位</span>
+                                                </div>
+                                                <div style="width:5.625rem;height: 5.625rem;display: inline-block;position: absolute;right:2.5rem"
+                                                    id="circleImg2"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3" style="position:relative">
+                                            <div
+                                                style="position: absolute;width: 100%;height:100%;left: 0rem;top: 2.5rem;">
+                                                <div class="iconfont icon-wenjianjia_kai iconAllClass"></div>
+                                                <div
+                                                    style="font-size: 1.25rem;display: inline-block;margin-left: .625rem;">
+                                                    <span style="font-size: 1.875rem;" id="onShlef">0</span> <br><span
+                                                        style="font-size: 1.25rem;">入库</span>
+                                                </div>
+                                                <div style="width:5.625rem;height: 5.625rem;display: inline-block;position: absolute;right:2.5rem;"
+                                                    id="circleImg3"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="height:50vh;width:100%;margin-left: .0625rem;">
+                                        <div class="row">
+                                            <div class="col-6" id="showBarPosition"></div>
+                                            <div class="col-6" id="showPiePosition">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="searchMessage">
+                                    <!-- 最底层的展示table -->
+                                    <div class="table-responsive"
+                                        style="height:70vh;margin-left: 1.8vw;width: 93%;margin-top: 1vh;">
+                                        <table class="table text-nowrap table-bordered" style="width: 100%;">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

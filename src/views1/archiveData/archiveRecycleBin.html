@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>档案门类</title>
+
+    <link rel="stylesheet" th:href="@{/bootstrap-5.1.3-dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/tree.css}">
+    <script th:src="@{/bootstrap-5.1.3-dist/js/bootstrap.bundle.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/configuration/templateGroup.css}">
+    <link rel="stylesheet" th:href="@{/css/configuration/archiveData.css}">
+    <script th:src="@{/js/configuration/deleteArchive.js}"></script>
+    <script th:src="@{/js/common/common.js}"></script>
+    <script th:src="@{/js/index.js}"></script>
+    <script type="text/javascript"
+        th:src="@{/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js}"></script>
+    <script type="text/javascript"
+        th:src="@{/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+    <link th:href="@{/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/icon/iconfont.css}">
+    
+    <script th:src="@{/js/menuTotal.js}"></script>
+
+
+    <!-- <link rel="stylesheet" href="../../static/bootstrap-5.1.3-dist/css/bootstrap.min.css">
+    <script src="../../static/js/jquery-1.11.3.min.js"></script>
+
+    <script src="../../static/js/configuration/templateGroup.js"></script>
+    <script src="../../static/js/index.js"></script>
+    <link rel="stylesheet" href="../../static/css/index.css">
+    <link rel="stylesheet" href="../../static/css/tree.css">
+
+    <script src="../../static/bootstrap-5.1.3-dist/js/bootstrap.bundle.js"></script>
+    <link rel="stylesheet" href="../../static/css/configuration/templateGroup.css">
+
+    <link rel="stylesheet" href="../../static/css/configuration/archiveData.css">
+    <script src="../../static/js/configuration/archiveData1.js"></script>
+
+    <script type="text/javascript"
+        src="../../static/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript"
+        src="../../static/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <link href="../../static/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" rel="stylesheet"> -->
+
+</head>
+
+<body class="wrapppd" style="overflow-x:hidden;overflow-y:Scroll">
+    <div class="row" style="height:8vh">
+        <headere class="col-12" style="height:8vh">
+
+        </headere>
+    </div>
+    <div class="row contentFather" style="height:92vh">
+        <div class="contentLeft col-2" style="height:100%">
+            <div style="height:7vh" class="topNavigationBorder" onclick="closeMenu()">
+                <span class="iconfont icon-zhankaicaidan1 globalMenu" id="Menu">菜单</span>
+            </div>
+        </div>
+        <div class="col-2 slideMenu" style="height:92vh;">
+            <div style="height:100%" class="showArchiveList">
+                <div class="borther">
+                    <span class="iconfont icon-fenlei">档案回收站</span>
+                </div>
+                <!-- 左侧导航栏 -->
+                <div class="addFile" style="height:85vh;">
+                    <th:block th:include="common/common ::classify(${list})" />
+                </div>
+            </div>
+            <div class="hideArchiveList" style="width:25%">档 案 回 收 站</div>
+        </div>
+        <!-- 点击显示或者隐藏中间的这个小菜单按钮 -->
+        <div class="showAndHiddenMiddle">
+            ＞
+        </div>
+        <div class="contentRight col-10 container-fluid" style="height: 100%;margin-left: 0rem;margin-right: 0rem;width: 73.3%;">
+            <div id="functionButton" style="height: 100%;">
+                <div class="row" style="height:7vh;margin-bottom:1vh;width: 98%;margin: 0;margin-left: 1.8vw;">
+                    <div class="currentPosition col-12" style="height:100%;">
+                        <span style="margin-left:2vw"> <a href="/toArchiveHome">智慧档案管理总平台> </a><a
+                                href="#">档案回收</a></span>
+                    </div>
+                </div>
+                <div class="row" style="height: 7vh;margin-top: -3vh;width: 100%;margin-left: 1.8vw;">
+                    <div class="col-6" style="height:5rem">
+                        <div style="height: 5rem;">
+                            <button type="button" class="btn btn-success add iconfont icon-huanyuan"
+                                onclick="batchReduction()" style="font-size:.8rem;margin-left: 2vw;">还原
+                            </button>
+                            <button type="button" onclick="removeToRecycle()" style="font-size:.8rem"
+                                class="btn btn-danger removeToRecycle iconfont icon-shanchu1">删除
+                            </button>
+                            <button type="button" class="btn btn-success add2" onclick="confirmed()">确认
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-6 letSearchHidden">
+                        <div class="changePosition">
+                            <div></div>
+                            <label for="searchById" class="form-label changePositionOne">ID:</label>
+                            <input type="text" class="form-control" id="searchById">
+                            <button class="btn btn-primary" type="button" onclick="searchMessage(this)">搜索</button>
+                            <span></span>
+                            <button class="btn btn-primary buttons " type="button" style="margin-right:5vw"
+                                data-bs-toggle="modal" data-bs-target="#advancedSearch">高级搜索</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="middleline table-responsive"
+                    style="height:70vh;margin-left: 1.8vw;width: 93%;margin-top: 1vh;">
+                    <table class="table text-nowrap table-bordered" style="width: auto;">
+                        <thead id="dataHead">
+                        </thead>
+                        <tbody id="dataTable">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row bottomMessage" style="display: none; height:8vh;margin-left: 1.8vw;">
+                    <div class="col-6">
+                        <div
+                            style="float: left;width: 4.375rem;margin-top: 0.25rem;height: 2.5rem;line-height: 2.5rem;margin-left: 2vw;">
+                            <span>展示数量:</span>
+                            <select class="form-select" aria-label="Default select example"
+                                style="width: 5rem;position:relative;top: -2.2rem;left: 4.625rem;height:2rem"
+                                id="pageSizeUl">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                            </select>
+                        </div>
+                        <div class="pagenum">已选择0项</div>
+                    </div>
+                    <div class="col-6">
+                        <div style="float: right;margin-top: 0.54rem;" class="showPageMessage"></div>
+                        <div style="float: right;margin-top: 0.25rem;width: 10rem;margin-right:2rem ;">
+                            <div class="belike">
+                                <input class="form-control form-control-sm" type="text" placeholder="" id="jumpVal"
+                                    aria-label=".form-control-sm example" style="width: 5rem;"
+                                    onkeyup="this.value=this.value.replace(/[^0-9]/g,'')">
+                                <button type="button" class="col-5  btn-primary amend"
+                                    style="width: 3rem;font-size: 0.8rem;margin-left: 1rem;" onclick="jumpToPage()">GO
+                                </button>
+                            </div>
+                            <div class="pagenation">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination1">
+                                        <!-- 分页器加在这里 -->
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 高级搜索弹框 -->
+    <div class="modal fade" id="advancedSearch" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">添加搜索条件:</h1>
+                    <select class="form-select form-select-sm selectMessage" aria-label=".form-select-sm example"
+                        style="width: 11.625rem;height: 2.5rem;margin-left:.625rem"></select>
+                    <button type="button" class="btn btn-success" onclick="addSearchCriteria()">添加</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row topOne">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="advancedSearch()"
+                        data-bs-dismiss="modal">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 添加列数据信息的时候显示的 -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">添加档案</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 addInput">
+                    </div>
+                    <div id="bindingParent">
+                        <a href="#" onclick="bindingFther()">绑定上级档案</a>
+                        <a href="#" id="showHasNum" style="float: right;">已选择0项</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        id="displayModal">取消</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        onclick="addNewArchiveDataInfo()">确认添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 查看下级弹框 -->
+    <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">选择下级</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select finSon selectSon" aria-label="Default select example">
+                        <!-- <option selected>我是儿子</option> -->
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary  cloose" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        onclick="readyToDrawLowLevel()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- td中的文字超出之后点击显示整个文本中的内容 -->
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title kicxnz" id="exampleModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 addInputed">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

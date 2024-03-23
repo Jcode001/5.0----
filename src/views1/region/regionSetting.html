@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>档案门类</title>
+
+    <script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/bootstrap-5.1.3-dist/css/bootstrap.min.css}">
+    <script th:src="@{/bootstrap-5.1.3-dist/js/bootstrap.bundle.js}"></script>
+    <script th:src="@{/js/treescroll.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/tree.css}">
+    <script th:src="@{/js/index.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/region/regionSetting.css}">
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <script th:src="@{/js/common/common.js}"></script>
+    <script th:src="@{/js/region/regionSetting.js}"></script>
+    <link rel="stylesheet" th:href="@{/icon/iconfont.css}">
+    
+    <script th:src="@{/js/menuTotal.js}"></script>
+
+    <!-- <script src="/static/bootstrap-5.1.3-dist/js/bootstrap.bundle.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap-5.1.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <script src="/static/js/jquery-1.11.3.min.js"></script>
+    <script src="/static/js/common/common.js"></script>
+    <script src="/static/js/region/regionSetting.js"></script>
+    <link rel="stylesheet" href="/static/css/region/regionSetting.css">
+    <script src="/static/js/index.js"></script> -->
+
+</head>
+
+<body class="wrapppd">
+    <div class="row" style="height:8vh">
+        <headere class="col-12" style="height:8vh">
+
+        </headere>
+    </div>
+    <div class="row contentFather" style="height:92vh">
+        <div class="contentLeft col-2" style="height:100%">
+            <div style="height:7vh" class="topNavigationBorder" onclick="closeMenu()">
+                <span class="iconfont icon-zhankaicaidan1 globalMenu" id="Menu">菜单</span>
+            </div>
+        </div>
+        <div class="col-2 slideMenu" style="height:92vh;">
+            <div style="height:100%" class="showArchiveList">
+                <div class="borther">
+                    <span class="iconfont icon-fenlei">密集架管理</span>
+                </div>
+                <!-- 左侧导航栏 -->
+                <div class="addFile" style="height:85vh">
+                    <ul>
+                        <li th:each="vo :${list}">
+                            <p th:text="${vo.getWarehouse().getName()}" th:wid="${vo.getWarehouse().getId()}"
+                                class="fatherislocation"></p>
+                            <ul>
+                                <li class="dislocation" th:each="region:${vo.getRegionList()}">
+                                    <p th:text="${region.getName()}" th:onclick="|regionClick(${region.getId()})|"></p>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="hideArchiveList" style="width:25%">密 集 架 管 理</div>
+        </div>
+        <!-- 点击显示或者隐藏中间的这个小菜单按钮 -->
+        <div class="showAndHiddenMiddle">
+            ＞
+        </div>
+        <div class="col-8 contentRight" style="height: 100%;margin-left: 0rem;margin-right: 0rem;width: 73.3%;">
+            <div style="height:100%">
+                <div class="row" style="margin-left:2vw;height: 7vh;margin-left:2vw">
+                    <div class="currentPosition col-12" style="height:100%;">
+                        <span style="margin-left:2vw"> <a href="/toArchiveHome">智慧档案管理总平台> </a><a
+                                href="#">密集架设置</a></span>
+                    </div>
+                </div>
+                <div style="height:7vh;margin-left:2vw">
+                    <button type="button" class="btn btn-success" id="add" onclick="addRegion()">添加</button>
+                    <button type="button" class="btn btn-danger" id="deleteRegion" onclick="deleteRegion()">删除</button>
+                </div>
+                <div class="row father" style="height:70vh;margin-left:2vw;width: 95%;">
+                    <div style="width: 100%;height:100%;overflow-y:scroll;display:none;margin-left:2vw"
+                        id="areaShowOrHidden">
+                        <div class="row" style="height:100%">
+                            <div class="col-6" style="height:100%">
+                                <!-- 区域配置 -->
+                                <div class="row" style="height:100%">
+                                    <div class="col-12" style="margin-left:2vw;height:100%">
+                                        <h4 class="sonPosition">区配置</h4>
+                                        <hr class="close">
+                                        <div style="display:flex;height:8%">
+                                            <div style="flex:1.5;text-align: right">库房<span style="color:red">*</span>:</div>
+                                            <div style="flex:2;margin-left: 5px;">
+                                                <select class="form-select form-select-sm"
+                                                    aria-label="Default select example" style="width: 100%;"
+                                                    id="warehouse">
+                                                    <option th:each="w : ${warehouses}" th:value="${w.id}"
+                                                        th:text="${w.name}">1
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div style="flex:1"></div>
+                                        </div>
+                                        <div style="display:flex;height:8%">
+                                            <div style="flex:1.5;text-align: right">区名<span style="color:red">*</span>:</div>
+                                            <div style="flex:2;margin-left: 5px;">
+                                                <input class="form-control form-control-sm" id="regionName" type="text"
+                                                    style="width: 100%;">
+                                            </div>
+                                            <div style="flex:1"></div>
+                                        </div>
+                                        <div style="display:flex;height:8%">
+                                            <div style="flex:1.5;text-align: right">密集架种类<span style="color:red">*</span>:</div>
+                                            <div style="flex:2;margin-left: 5px;">
+                                                <select class="form-select form-select-sm"
+                                                    aria-label="Default select example" style="width: 100%;"
+                                                    id="brandId">
+                                                    <option value="-1" selected>请选择</option>
+                                                    <option th:each="sb : ${shelfBrands}" th:value="${sb.id}"
+                                                        th:text="${sb.name}">1</option>
+                                                </select>
+                                            </div>
+                                            <div style="flex:1"></div>
+                                        </div>
+                                        <div style="display:flex;height:8%">
+                                            <div style="flex:1.5;text-align: right">密集功能<span style="color:red">*</span>:</div>
+                                            <div style="flex:2;margin-left: 5px;">
+                                                <select class="form-select form-select-sm"
+                                                    aria-label="Default select example" style="width: 100%;"
+                                                    id="functionMJJ">
+                                                    <option value="-1" selected>请选择</option>
+                                                    <option value="0">普通</option>
+                                                    <option value="1">除尘除霉</option>
+                                                </select>
+                                            </div>
+                                            <div style="flex:1"></div>
+                                        </div>
+                                        <div style="display:flex;height:10%">
+                                            <div style="flex:1.5;text-align: right">额外参数<span style="color:red">*</span>:</div>
+                                            <div style="flex:2;margin-left: 5px;">
+                                                <textarea class="form-control form-control-sm"
+                                                    id="otherParam"></textarea>
+                                            </div>
+                                            <div style="flex:1"></div>
+                                        </div>
+                                        <div style="display:flex;height:8%">
+                                            <div style="flex:1.5;text-align: right">ip<span style="color:red">*</span>:</div>
+                                            <div style="flex:2;margin-left: 5px;">
+                                                <input class="form-control form-control-sm" id="ip" type="text"
+                                                    style="width: 100%;">
+                                            </div>
+                                            <div style="flex:1"></div>
+                                        </div>
+                                        <div style="display:flex;height:8%">
+                                            <div style="flex:1.5;text-align: right">端口<span style="color:red">*</span>:</div>
+                                            <div style="flex:2;margin-left: 5px;">
+                                                <input class="form-control form-control-sm" id="port" type="number"
+                                                    style="width: 100%;">
+                                            </div>
+                                            <div style="flex:1"></div>
+                                        </div>
+                                        <div style="display:flex;height:8%">
+                                            <div style="flex:1.5;text-align: right">列排序规则<span style="color:red">*</span>:</div>
+                                            <div style="flex:2;margin-left: 5px;">
+                                                <select class="form-select form-select-sm" id="columnOrderingRule"
+                                                    aria-label="Default select example" style="width: 100%;">
+                                                    <option value="0" selected>从左到右</option>
+                                                    <option value="1">从右到左</option>
+                                                </select>
+                                            </div>
+                                            <div style="flex:1"></div>
+                                        </div>
+                                        <div style="display:flex;height:8%">
+                                            <div style="flex:1.5;text-align: right">列起始序号<span style="color:red">*</span>:</div>
+                                            <div style="flex:2;margin-left: 5px;">
+                                                <select class="form-select form-select-sm"
+                                                    aria-label="Default select example" style="width: 100%;"
+                                                    id="columnStartSerialNumber">
+                                                    <option value="0">0</option>
+                                                    <option value="1">1</option>
+                                                </select>
+                                            </div>
+                                            <div style="flex:1"></div>
+                                        </div>
+                                        <div style="display:flex;height:8%">
+                                            <div style="flex:1.5;text-align: right">固定列位置<span style="color:red">*</span>:</div>
+                                            <div style="flex:2;margin-left: 5px;">
+                                                <select class="form-select form-select-sm"
+                                                    aria-label="Default select example" style="width: 100%;"
+                                                    id="immobilizationColumnIndex">
+                                                </select>
+                                            </div>
+                                            <div style="flex:1"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6" style="height:100%">
+                                <!-- 列配置 -->
+                                <div class="row">
+                                    <div class="col-12" style="margin-left:2vw">
+                                        <h4 class="sonPosition">密集架配置</h4>
+                                        <hr class="close">
+                                        <div>
+                                            <button type="button" class="btn btn-success"
+                                                    onclick="addColumn()">添加</button>
+                                            <button type="button" class="btn btn-primary" style="display: none" id="globalSetting"
+                                                    data-bs-toggle="modal" data-bs-target="#columnFormData">全局设置</button>
+                                        </div>
+                                        <div class="columnContainer" id="columnContainer">
+                                            <!-- 这里是列显示的内容 -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row bottom" style="height:8vh">
+                    <div class="col-4"></div>
+                    <div class="col-4"></div>
+                    <div class="col-4">
+                        <button type='button' class="btn btn-success bottomButton" id="updateRegionAndColumnData"
+                            style="margin-right:4vw">更新</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="columnFormData" tabindex="-1" aria-labelledby="columnDataFormTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="columnDataFormTitle">第1列配置</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-left: 20px;margin-top: 10px; display: none;" id="immobilizationColumnSetting">
+                        <span>固定列存放档案侧</span>
+                        <div style="display: inline-block;">
+                            <select class="form-select form-select-sm" id="immobilizationColumnSettingSelect"
+                                aria-label=".form-select-sm example">
+                                <option value=0>两侧</option>
+                                <option value=1>左侧</option>
+                                <option value=2>右侧</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row modalSelect" style="margin: 0px;">
+                        <div class="col-6" id="leftColumnDataButton" onclick="changeColumnPosition(0)"
+                            style="padding-left:12px;width: 233px;background-color:#eee;">左
+                        </div>
+                        <div class="col-6" id="rightColumnDataButton" onclick="changeColumnPosition(1)"
+                            style="width: 233px;">右
+                        </div>
+                    </div>
+                    <div style="background-color:#eee;" id="columnData" position="0">
+                        <div style="margin-left: 20px;">
+                            <span style="width: 30%;display: inline-block;text-align: right;">是否存在格:</span>
+                            <div style="display: inline-block;" id="haveGridDiv">
+                                <input type="radio" checked name="haveGrid" value="1">
+                                <label>是</label>
+                                <input type="radio" name="haveGrid" value="0">
+                                <label>否</label>
+                            </div>
+                        </div>
+
+                        <div style="margin-left: 20px;margin-top: 10px;">
+                            <span style="width: 30%;display: inline-block;text-align: right;">节数量:</span>
+                            <div style="display: inline-block;">
+                                <input type="number" name="sectionCount" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div style="margin-left: 20px;margin-top: 10px;">
+                            <span style="width: 30%;display: inline-block;text-align: right;">节排列规则:</span>
+                            <div style="display: inline-block;">
+                                <select class="form-select form-select-sm" name="sectionOrderingRule"
+                                    aria-label=".form-select-sm example">
+                                    <option value="0">从左到右</option>
+                                    <option value="1">从右到左</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin-left: 20px;margin-top: 10px;">
+                            <span style="width: 30%;display: inline-block;text-align: right;">节起起始序号:</span>
+                            <div style="display: inline-block;">
+                                <select class="form-select form-select-sm" name="sectionStartSerialNumber"
+                                    aria-label=".form-select-sm example">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin-left: 20px;margin-top: 10px;">
+                            <span style="width: 30%;display: inline-block;text-align: right;">层数量:</span>
+                            <div style="display: inline-block;">
+                                <input type="number" name="tierCount" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div style="margin-left: 20px;margin-top: 10px;">
+                            <span style="width: 30%;display: inline-block;text-align: right;">层排列规则:</span>
+                            <div style="display: inline-block;">
+                                <select class="form-select form-select-sm" name="tierOrderingRule"
+                                    aria-label=".form-select-sm example">
+                                    <option value="1">从上到下</option>
+                                    <option value="0">从下到上</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin-left: 20px;margin-top: 10px;">
+                            <span style="width: 30%;display: inline-block;text-align: right;">层起始序号:</span>
+                            <div style="display: inline-block;">
+                                <select class="form-select form-select-sm" name="tierStartSerialNumber"
+                                    aria-label=".form-select-sm example">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="gridData" style="display: none;">
+                            <div style="margin-left: 20px;margin-top: 10px;">
+                                <span style="width: 30%;display: inline-block;text-align: right;">格数量:</span>
+                                <div style="display: inline-block;">
+                                    <input type="number" class="form-control form-control-sm" name="gridCount">
+                                </div>
+                            </div>
+                            <div style="margin-left: 20px;margin-top: 10px;">
+                                <span style="width: 30%;display: inline-block;text-align: right;">格排列规则:</span>
+                                <div style="display: inline-block;">
+                                    <select class="form-select form-select-sm" name="gridOrderingRule"
+                                        aria-label=".form-select-sm example">
+                                        <option value="0">从左到右</option>
+                                        <option value="1">从右到左</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="margin-left: 20px;margin-top: 10px;">
+                                <span style="width: 30%;display: inline-block;text-align: right;">格起始序号:</span>
+                                <div style="display: inline-block;">
+                                    <select class="form-select form-select-sm" name="gridStartSerialNumber"
+                                        aria-label=".form-select-sm example">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" onclick="saveColumnFormData()" class="btn btn-primary"
+                        data-bs-dismiss="modal">保存配置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

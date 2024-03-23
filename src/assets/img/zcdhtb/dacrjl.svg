@@ -1,0 +1,12 @@
+<svg id="组_2" data-name="组 2" xmlns="http://www.w3.org/2000/svg" width="12.5" height="14.5" viewBox="0 0 12.5 14.5">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="矩形_33" data-name="矩形 33" class="cls-1" d="M63,394h1V380H63v14Zm1,0H74v-1H64v1Zm10,0h1v-6H74v6ZM64,381h5v-1H64v1Z" transform="translate(-63 -379.5)"/>
+  <path id="矩形_34" data-name="矩形 34" class="cls-1" d="M66.586,386.985l7.485-7.485,1.414,1.414L68,388.4s-1.984.586-2,.6S66.586,386.985,66.586,386.985Z" transform="translate(-63 -379.5)"/>
+</svg>

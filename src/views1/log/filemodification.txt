@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户操作日志</title>
+    <!-- <script th:inline="javascript">
+        var basePath  /*[[${ #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort()}]]*/
+    </script>-->
+    <link rel="stylesheet" th:href="@{/bootstrap-5.1.3-dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/log/filemodification.css}">
+    <link rel="stylesheet" th:href="@{/css/tree.css}">
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <script th:src="@{/bootstrap-5.1.3-dist/js/bootstrap.bundle.js}"></script>
+    <script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+    <script th:src="@{/js/log/filemodification.js}"></script>
+    <script th:src="@{/js/common/common.js}"></script>
+    <script th:src="@{/js/index.js}"></script>
+    <script type="text/javascript"
+        th:src="@{/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js}"></script>
+    <script type="text/javascript"
+        th:src="@{/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+    <link th:href="@{/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/icon/iconfont.css}">
+    
+    <script th:src="@{/js/menuTotal.js}"></script>
+
+
+    <!-- <link rel="stylesheet" href="../../static/css/log/filemodification.css">
+       <link rel="stylesheet" href="../../static/bootstrap-5.1.3-dist/css/bootstrap.min.css">
+       <link rel="stylesheet" href="../../static/css/index.css">
+       <link rel="stylesheet" href="../../static/css/tree.css">
+
+       <script src="../../static/bootstrap-5.1.3-dist/js/bootstrap.bundle.js"></script>
+       <script src="../../static/js/log/filemodification.js"></script>
+       <script src="../../static/js/jquery-1.11.3.min.js"></script>
+       <script src="../../static/js/index.js"></script> -->
+</head>
+
+<body class="wrapppd">
+    <div class="container-fluid ">
+        <div class="row" style="height:8vh">
+            <headere class="col-12"></headere>
+        </div>
+        <div class="row contentFather" style="height:92vh">
+            <div class="contentLeft col-2" style="height:100%">
+                <div style="height:7vh" class="topNavigationBorder" onclick="closeMenu()">
+                    <span class="iconfont icon-zhankaicaidan1 globalMenu" id="Menu">菜单</span>
+                </div>
+            </div>
+            <div class="col-10 contentRight" style="height:100%;width:85%">
+                <div style="height:100%">
+                    <div class="row" style="margin-left:2vw;height: 7vh;margin-left:2vw">
+                        <div class="currentPosition col-12" style="height:100%;">
+                            <span style="margin-left:2vw"> <a href="/toArchiveHome">档案管理> </a><a href="#">系统日志></a><a
+                                    href="#">档案修改日志</a></span>
+                        </div>
+                    </div>
+                    <div class="RightHeader" style="height: 6vh;margin-left: 0.7vw;">
+                        <div>
+                            <div class="from">
+                                <div style="display: flex;align-items: center;flex-shrink: 0;">
+                                    <label style="font-weight: bold;">操作用户:</label>
+                                    <div class="col-sm-4" style="width: 7.5vw;">
+                                        <input style="border-radius: 0;" type="username" id="operatorid"
+                                            class="form-control">
+                                    </div>
+                                </div>
+
+                                <div style="display: flex;align-items: center;flex-shrink: 0;">
+                                    <label style="font-weight: bold;">发送请求主机ID:</label>
+                                    <div class="col-sm-4" style="width: 7.5vw;">
+                                        <input style="border-radius: 0;" type="username" id="restmethod"
+                                            class="form-control">
+                                    </div>
+                                </div>
+
+
+                                <div style="display: flex;align-items: center;flex-shrink: 0;">
+                                    <label style="font-weight: bold;">开始时间:</label>
+                                    <div class="col-sm-4" style="width: 7.5vw;">
+                                        <input style="border-radius: 0;" type="username" id="startTime"
+                                            class="form-control">
+                                    </div>
+                                </div>
+
+                                <div style="display: flex;align-items: center;flex-shrink: 0;">
+                                    <label style="font-weight: bold;">结束时间:</label>
+                                    <div class="col-sm-4" style="width: 7.5vw;">
+                                        <input style="border-radius: 0;" type="username" id="endTime"
+                                            class="form-control">
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <button type="button" id="serchlistnode" onclick="serchlist()"
+                                        class="btn btn-success add iconfont icon-daochu "
+                                        style="background-color: rgb(95, 141, 198);border:1px solid rgb(95, 141, 198);line-height: 2vh;width: 7vw; height: 2.1rem;border-radius: 0;">查询
+                                    </button>
+                                </div>
+
+                                <div>
+                                    <button type="button" id="openshelfrecordexport" onclick="openexport()"
+                                        class="btn btn-success add iconfont icon-daochu "
+                                        style="background-color: rgb(60, 138, 231);border:1px solid rgb(60, 138, 231);line-height: 2vh;width: 7vw; height: 2.1rem;border-radius: 0;">导出
+                                    </button>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="RightCenter" style="height: 72vh;margin-left: 2vw;padding-top: 1vh;">
+                        <div class="cnterTable" style="padding: 0 30px 0 0;">
+                            <table class="table table-hover text-nowrap table-bordered">
+                                <thead class="table-light" style="text-align: center;">
+                                    <tr>
+                                        <th>
+                                            <input class="form-check-input" type="checkbox" id="allSelect">
+                                        </th>
+                                        <th scope="col">序号</th>
+                                        <th scope="col">操作用户</th>
+                                        <th scope="col">门类</th>
+                                        <th scope="col">档案ID</th>
+                                        <th scope="col">数据ID</th>
+                                        <th scope="col">发送请求主机IP</th>
+                                        <th scope="col">操作时间</th>
+                                        <th scope="col">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dataTable" style="text-align: center;">
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 内容文本超出查看 -->
+                        <div class="modal fade" id="check" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">内容</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" id="checkBox">
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary"data-bs-dismiss="modal">关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="RightFooter" style="height:7vh">
+                        <div class="FooterPageindex">
+                            <div
+                                style="margin-left:2vw;float: left;margin-top: 0.25rem;height: 2.5rem;line-height: 2.5rem;display: flex;align-items: center;">
+                                <span>展示数量:</span>
+                                <select class="form-select" aria-label="Default select example"
+                                    style="width: 5rem;float: right; " id="exhibition" onchange="exhibition(this)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                </select>
+                            </div>
+                            <div style="margin-right:4vw">
+                                <div class="row" style="float: right;margin-left: 2rem;">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination">
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="row"
+                                    style="float: right;margin-top: 0.25rem;width: 10rem;margin-left:2rem ;">
+                                    <input class="form-control form-control-sm" type="text" placeholder="" id="jumpVal"
+                                        aria-label=".form-control-sm example" style="width: 5rem;text-align: center;"
+                                        onkeyup="this.value=this.value.replace(/[^0-9]/g,'')">
+                                    <button type="button" class="btn col-5  btn-primary amend"
+                                        style="width: 3rem;font-size: 0.8rem;margin-left: 1rem;" onclick="jump()">GO
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
